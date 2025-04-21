@@ -7,4 +7,8 @@
     <string name="share_app">Поделиться приложением</string>
     <string name="support">Написать в поддержку</string>
     <string name="user_agreement">Пользовательское соглашение</string>
+
+    <string name="btn_search_pressed">Нажата кнопка Поиск</string>
+    <string name="btn_library_pressed">Нажата кнопка Медиатека</string>
+    <string name="btn_settings_pressed">Нажата кнопка Настройки</string>
 </resources>
