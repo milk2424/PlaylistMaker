@@ -7,5 +7,11 @@
     <color name="settings_black">#1A1B22</color>
     <color name="settings_btn_color">#AEAFB4</color>
     <color name="active_screen_color">#3772E7</color>
+    <color name="settings_background">#FFFFFFFF</color>
+
+    <color name="thumb_off_color">#AEAFB4</color>
+    <color name="thumb_on_color">#3772E7</color>
+    <color name="track_off_color">#E6E8EB</color>
+    <color name="track_on_color">#9FBBF3</color>
 </resources>
 

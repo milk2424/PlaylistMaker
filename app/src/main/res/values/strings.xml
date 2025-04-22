@@ -11,4 +11,5 @@
     <string name="btn_search_pressed">Нажата кнопка Поиск</string>
     <string name="btn_library_pressed">Нажата кнопка Медиатека</string>
     <string name="btn_settings_pressed">Нажата кнопка Настройки</string>
+    <string name="btn_back">btn_back</string>
 </resources>

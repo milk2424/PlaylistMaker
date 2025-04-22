@@ -1,16 +1,20 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
 
+    override fun onStart() {
+        super.onStart()
         setBtnListeners()
     }
 
@@ -20,19 +24,17 @@ class MainActivity : AppCompatActivity() {
         val settingsBtn = findViewById<Button>(R.id.btn_settings)
 
         val searchBtnClickListener: View.OnClickListener = object : View.OnClickListener {
-            override fun onClick(v: View?) = showMessage(getString(R.string.btn_search_pressed))
+            override fun onClick(v: View?) =
+                startActivity(Intent(this@MainActivity, SearchActivity::class.java))
+
         }
         searchBtn.setOnClickListener(searchBtnClickListener)
         libraryBtn.setOnClickListener {
-            showMessage(getString(R.string.btn_library_pressed))
+            startActivity(Intent(this, LibraryActivity::class.java))
         }
         settingsBtn.setOnClickListener {
-            showMessage(getString(R.string.btn_settings_pressed))
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
-    }
-
-    private fun showMessage(message: String) {
-        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
     }
 }
