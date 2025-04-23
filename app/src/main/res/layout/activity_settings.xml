@@ -1,97 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/settings_background">
+    android:background="@color/settings_background"
+    android:orientation="vertical"
+    >
+
+
+    <TextView
+        android:id="@+id/settings_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="16dp"
+        android:fontFamily="@font/ys_display_regular_regular"
+        android:padding="16dp"
+        android:text="@string/settings"
+        android:textColor="@color/settings_black"
+        android:textSize="@dimen/main_screen_text_size"
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/btn_arrow_back"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:backgroundTint="@color/white"
-                android:contentDescription="@string/btn_back"
-                android:src="@drawable/btn_arrow_back" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginVertical="21dp"
                 android:fontFamily="@font/ys_display_regular_regular"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="16dp"
-                android:text="@string/settings"
-                android:textColor="@color/settings_black"
-                android:textSize="@dimen/main_screen_text_size"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:text="@string/dark_theme"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="56dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginVertical="10dp"
+                app:thumbTint="@drawable/custom_thumb"
+                app:trackTint="@drawable/custom_track"
+                app:useMaterialThemeColors="false"
+                />
+        </FrameLayout>
 
-        <LinearLayout
+        <Button
+            style="@style/Widget.AppCompat.Button.SettingsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="12dp">
+            android:text="@string/share_app"
+            app:icon="@drawable/btn_share"
+            />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginVertical="21dp"
-                    android:fontFamily="@font/ys_display_regular_regular"
-                    android:text="@string/dark_theme"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:layout_width="56dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="end"
-                    android:layout_marginVertical="10dp"
-                    app:thumbTint="@drawable/custom_thumb"
-                    app:trackTint="@drawable/custom_track"
-                    app:useMaterialThemeColors="false" />
-            </FrameLayout>
-
-            <Button
-                style="@style/Widget.AppCompat.Button.SettingsButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/share_app"
-                app:icon="@drawable/btn_share" />
-
-            <Button
-                style="@style/Widget.AppCompat.Button.SettingsButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/support"
-                app:icon="@drawable/btn_support" />
+        <Button
+            style="@style/Widget.AppCompat.Button.SettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/support"
+            app:icon="@drawable/btn_support"
+            />
 
 
-            <Button
-                style="@style/Widget.AppCompat.Button.SettingsButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/user_agreement"
-                app:icon="@drawable/btn_arrow_forward" />
-        </LinearLayout>
-
-
+        <Button
+            style="@style/Widget.AppCompat.Button.SettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/user_agreement"
+            app:icon="@drawable/btn_arrow_forward"
+            />
     </LinearLayout>
+
 
     <!--    <LinearLayout-->
     <!--        android:layout_width="match_parent"-->
@@ -167,4 +157,4 @@
     <!--        </LinearLayout>-->
 
     <!--    </LinearLayout>-->
-</FrameLayout>
+</LinearLayout>
