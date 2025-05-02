@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/settings_background"
+    android:orientation="vertical"
+    >
+
+
+    <TextView
+        android:id="@+id/settings_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="16dp"
+        android:fontFamily="@font/ys_display_regular_regular"
+        android:padding="16dp"
+        android:text="@string/settings"
+        android:textColor="@color/settings_black"
+        android:textSize="@dimen/main_screen_text_size"
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/btn_arrow_back"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="12dp"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginVertical="21dp"
+                android:fontFamily="@font/ys_display_regular_regular"
+                android:text="@string/dark_theme"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="56dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginVertical="10dp"
+                app:thumbTint="@drawable/custom_thumb"
+                app:trackTint="@drawable/custom_track"
+                app:useMaterialThemeColors="false"
+                />
+        </FrameLayout>
+
+        <Button
+            style="@style/Widget.AppCompat.Button.SettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/share_app"
+            app:icon="@drawable/btn_share"
+            />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.SettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/support"
+            app:icon="@drawable/btn_support"
+            />
+
+
+        <Button
+            style="@style/Widget.AppCompat.Button.SettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/user_agreement"
+            app:icon="@drawable/btn_arrow_forward"
+            />
+    </LinearLayout>
+
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="bottom"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:paddingVertical="8dp">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            <ImageView-->
+    <!--                android:layout_width="@dimen/settings_icon_size"-->
+    <!--                android:layout_height="@dimen/settings_icon_size"-->
+    <!--                android:layout_gravity="center"-->
+    <!--                android:backgroundTint="@color/settings_black"-->
+    <!--                android:contentDescription="@string/search"-->
+    <!--                android:src="@drawable/btn_search" />-->
+
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_gravity="center_horizontal"-->
+    <!--                android:text="@string/search"-->
+    <!--                android:textColor="@color/settings_black" />-->
+    <!--        </LinearLayout>-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            <ImageView-->
+    <!--                android:layout_width="@dimen/settings_icon_size"-->
+    <!--                android:layout_height="@dimen/settings_icon_size"-->
+    <!--                android:layout_gravity="center"-->
+    <!--                android:backgroundTint="@color/settings_black"-->
+    <!--                android:contentDescription="@string/library"-->
+    <!--                android:src="@drawable/btn_library" />-->
+
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_gravity="center_horizontal"-->
+    <!--                android:text="@string/library"-->
+    <!--                android:textColor="@color/settings_black" />-->
+    <!--        </LinearLayout>-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:orientation="vertical">-->
+
+    <!--            <ImageView-->
+    <!--                android:layout_width="@dimen/settings_icon_size"-->
+    <!--                android:layout_height="@dimen/settings_icon_size"-->
+    <!--                android:layout_gravity="center"-->
+    <!--                android:contentDescription="@string/settings"-->
+    <!--                android:src="@drawable/btn_settings"-->
+    <!--                app:tint="@color/active_screen_color" />-->
+
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_gravity="center_horizontal"-->
+    <!--                android:text="@string/settings"-->
+    <!--                android:textColor="@color/active_screen_color" />-->
+    <!--        </LinearLayout>-->
+
+    <!--    </LinearLayout>-->
+</LinearLayout>
