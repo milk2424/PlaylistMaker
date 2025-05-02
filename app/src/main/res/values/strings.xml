@@ -12,4 +12,13 @@
     <string name="btn_library_pressed">Нажата кнопка Медиатека</string>
     <string name="btn_settings_pressed">Нажата кнопка Настройки</string>
     <string name="btn_back">btn_back</string>
+
+    <string name="link_to_course">https://practicum.yandex.com/profile/android-developer-plus/?from=learn_subscriptions-with-prof-recommendations</string>
+    <string name="user_email">dimamilkk@yandex.by</string>
+    <string name="thank_to_dev_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="thank_to_dev_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="link_to_user_agreement">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="app_to_share">Выбери приложение для отправки</string>
+    <string name="clear_edit_text">x</string>
+
 </resources>
