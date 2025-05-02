@@ -31,7 +31,7 @@
     </style>
 
 
-    <style name="MainScreenButton" parent="Widget.MaterialComponents.Button">
+    <style name="MainScreenButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
