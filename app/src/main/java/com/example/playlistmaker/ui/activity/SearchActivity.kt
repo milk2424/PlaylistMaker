@@ -19,20 +19,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        setListeners()
-    }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(EDIT_TEXT_VALUE_KEY, savedEditTextValue)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedEditTextValue = savedInstanceState.getString(EDIT_TEXT_VALUE_KEY)
-    }
-
-    private fun setListeners() {
         val btnBack = findViewById<TextView>(R.id.btn_back_search)
         btnBack.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
@@ -72,6 +59,16 @@ class SearchActivity : AppCompatActivity() {
             } else false
         }
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(EDIT_TEXT_VALUE_KEY, savedEditTextValue)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedEditTextValue = savedInstanceState.getString(EDIT_TEXT_VALUE_KEY)
     }
 
     companion object {
