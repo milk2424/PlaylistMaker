@@ -20,7 +20,7 @@ import com.example.playlistmaker.ui.recyclerVIew.TrackAdapter
 
 class SearchActivity : AppCompatActivity() {
     private var savedEditTextValue: String? = ""
-    val mockTrackList = initMockTrackList()
+    private val mockTrackList = initMockTrackList()
     private lateinit var rcView: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
