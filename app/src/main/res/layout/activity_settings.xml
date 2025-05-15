@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/settings_back_btn"
-        style="@style/previous_screen_textview"
+        style="@style/PreviousScreenTextview"
         android:text="@string/settings"
         />
 
