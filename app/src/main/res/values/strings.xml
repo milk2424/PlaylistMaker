@@ -20,5 +20,11 @@
     <string name="link_to_user_agreement">https://yandex.ru/legal/practicum_offer/</string>
     <string name="app_to_share">Выбери приложение для отправки</string>
     <string name="clear_edit_text">x</string>
+    <string name="empty_track_list_text">Ничего не нашлось</string>
+    <string name="bad_connection_error_text">Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету</string>
+
+    <string name="search_update_button">Обновить</string>
+
+
 
 </resources>
