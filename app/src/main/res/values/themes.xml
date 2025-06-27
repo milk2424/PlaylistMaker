@@ -119,15 +119,15 @@
     <color name="search_edit_text_bg_color">@color/light_gray</color>
     <color name="search_edit_text_icon_color">@color/yp_text_gray</color>
     <color name="search_edit_text_hint_color">@color/yp_text_gray</color>
+    <color name="search_track_name_color">@color/black</color>
+    <color name="search_track_bottom_text_color">@color/yp_text_gray</color>
+    <color name="search_error_track_list_text_color">@color/main_dark</color>
+    <color name="search_button_update_bg_color">@color/main_dark</color>
+    <color name="search_button_update_text_color">@color/white</color>
 
     <color name="settings_screen_bg">@color/white</color>
     <color name="settings_text_color">@color/main_dark</color>
     <color name="settings_icon_color">@color/settings_btn_color</color>
     <color name="settings_back_icon_color">@color/main_dark</color>
 
-    <color name="search_track_name_color">@color/black</color>
-    <color name="search_track_bottom_text_color">@color/yp_text_gray</color>
-    <color name="search_error_track_list_text_color">@color/main_dark</color>
-    <color name="search_button_update_bg_color">@color/main_dark</color>
-    <color name="search_button_update_text_color">@color/white</color>
 </resources>

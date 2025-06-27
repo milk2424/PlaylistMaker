@@ -38,7 +38,7 @@
                 android:textSize="16sp"
                 />
 
-            <androidx.appcompat.widget.SwitchCompat
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/theme_switch"
                 android:layout_width="56dp"
                 android:layout_height="40dp"
@@ -46,7 +46,6 @@
                 android:layout_marginVertical="10dp"
                 app:thumbTint="@drawable/custom_thumb"
                 app:trackTint="@drawable/custom_track"
-                app:useMaterialThemeColors="false"
                 />
         </FrameLayout>
 

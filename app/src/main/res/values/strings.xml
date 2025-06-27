@@ -24,7 +24,8 @@
     <string name="bad_connection_error_text">Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету</string>
 
     <string name="search_update_button">Обновить</string>
-
+    <string name="your_search">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
 
 
 </resources>
