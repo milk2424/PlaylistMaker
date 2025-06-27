@@ -39,6 +39,6 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     companion object {
         private const val TRACK_HISTORY_SIZE = 10
-        private const val TRACK_HISTORY = "TRACK_HISTORY"
+        const val TRACK_HISTORY = "TRACK_HISTORY"
     }
 }

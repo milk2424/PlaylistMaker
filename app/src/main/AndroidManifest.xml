@@ -18,7 +18,7 @@
         >
         <activity
             android:name=".ui.activity.SearchActivity"
-            android:exported="false"
+            android:exported="true"
             />
         <activity
             android:name=".ui.activity.LibraryActivity"
@@ -38,6 +38,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activity.PlayerActivity"
+            android:exported="true"
+            />
+
     </application>
 
 </manifest>
