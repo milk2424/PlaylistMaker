@@ -1,23 +1,26 @@
 package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
+import android.system.Os.remove
 import android.util.Log
 import com.google.gson.Gson
 
 class SearchHistory(private val sharedPreferences: SharedPreferences) {
-    var listOfHistory = mutableListOf<Track>()
+    private var _listOfHistory = mutableListOf<Track>()
+
+    val listOfHistory: List<Track> get() = _listOfHistory.toList()
 
     private fun loadHistory() {
         val json = sharedPreferences.getString(TRACK_HISTORY, "")
         if (!json.isNullOrEmpty())
-            listOfHistory = Gson().fromJson(json, Array<Track>::class.java).toMutableList()
+            _listOfHistory = Gson().fromJson(json, Array<Track>::class.java).toMutableList()
     }
 
     fun addTrackToHistory(track: Track) {
-        listOfHistory.apply {
+        _listOfHistory.apply {
             remove(track)
             add(track)
-            if (size > 10) repeat(size - 10) {
+            if (size > TRACK_HISTORY_SIZE) repeat(size - TRACK_HISTORY_SIZE) {
                 removeAt(0)
             }
         }
@@ -27,7 +30,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     fun clearTrackHistory() {
         sharedPreferences.edit().clear().apply()
-        listOfHistory.clear()
+        _listOfHistory.clear()
     }
 
     init {
@@ -35,6 +38,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
     }
 
     companion object {
+        private const val TRACK_HISTORY_SIZE = 10
         private const val TRACK_HISTORY = "TRACK_HISTORY"
     }
 }

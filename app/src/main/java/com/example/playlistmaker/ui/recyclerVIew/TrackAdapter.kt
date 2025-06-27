@@ -19,7 +19,6 @@ class TrackAdapter(val trackList: List<Track>) : RecyclerView.Adapter<TrackViewH
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.trackView.setOnClickListener {
-            Log.d("TESTGSON", "CLICKED TO VIEW")
             onClickCallback?.invoke(trackList[position])
         }
         holder.bind(trackList[position])
