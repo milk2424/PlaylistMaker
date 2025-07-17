@@ -112,6 +112,21 @@
         <item name="android:text">@string/search_update_button</item>
     </style>
 
+    <style name="playerTrackInfoCategory">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">@color/player_track_info_category_text_color</item>
+        <item name="android:paddingVertical">8dp</item>
+    </style>
+
+    <style name="playerTrackInfoText">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">@color/player_track_info_text_color</item>
+    </style>
+
 
     <color name="main_screen_bg">@color/main_blue</color>
     <color name="previous_screen_text_color">@color/main_dark</color>
@@ -129,5 +144,12 @@
     <color name="settings_text_color">@color/main_dark</color>
     <color name="settings_icon_color">@color/settings_btn_color</color>
     <color name="settings_back_icon_color">@color/main_dark</color>
+
+    <color name="player_bg_color">@color/white</color>
+    <color name="player_track_name_text_color">@color/main_dark</color>
+    <color name="player_track_info_category_text_color">#AEAFB4</color>
+    <color name="player_track_info_text_color">@color/main_dark</color>
+    <color name="player_track_btn_play_bg_color">@color/main_dark</color>
+    <color name="player_track_btn_save_add_bg_color">#401A1B22</color>
 
 </resources>

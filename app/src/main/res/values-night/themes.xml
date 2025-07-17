@@ -29,4 +29,11 @@
     <color name="search_error_track_list_text_color">@color/white</color>
     <color name="search_button_update_bg_color">@color/white</color>
     <color name="search_button_update_text_color">@color/main_dark</color>
+
+
+    <color name="player_bg_color">@color/main_dark</color>
+    <color name="player_track_name_text_color">@color/white</color>
+    <color name="player_track_info_text_color">@color/white</color>
+    <color name="player_track_btn_play_bg_color">@color/white</color>
+    <color name="player_track_btn_save_add_bg_color">#40FFFFFF</color>
 </resources>

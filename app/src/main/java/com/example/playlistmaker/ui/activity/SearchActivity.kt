@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -22,6 +23,7 @@ import com.example.playlistmaker.data.Track
 import com.example.playlistmaker.data.api.ITunesService
 import com.example.playlistmaker.data.api.TrackResponse
 import com.example.playlistmaker.ui.recyclerVIew.TrackAdapter
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -128,6 +130,9 @@ class SearchActivity : AppCompatActivity() {
 
         trackAdapter.onClickCallback = { track ->
             searchHistory.addTrackToHistory(track)
+            val intent = Intent(this, PlayerActivity::class.java)
+            intent.putExtra(PLAY_TRACK, Gson().toJson(track))
+            startActivity(intent)
         }
 
 
@@ -205,6 +210,7 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val EDIT_TEXT_VALUE_KEY = "EDIT_TEXT_VALUE_KEY"
+        const val PLAY_TRACK = "PLAY_TRACK"
     }
 
 }
