@@ -3,6 +3,7 @@ package com.example.playlistmaker.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View.GONE
@@ -12,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +25,6 @@ import com.example.playlistmaker.data.Track
 import com.example.playlistmaker.data.api.ITunesService
 import com.example.playlistmaker.data.api.TrackResponse
 import com.example.playlistmaker.ui.recyclerVIew.TrackAdapter
-import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,27 +42,36 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
     private lateinit var noTrackLayout: LinearLayout
     private lateinit var badConnectionErrorLayout: LinearLayout
+    private lateinit var progressBarSearch: ProgressBar
     private val trackList = mutableListOf<Track>()
     private val trackAdapter = TrackAdapter(trackList)
 
+    private var isTrackItemClicked = false
+    private var getTrackListRunnable = Runnable {}
+    private val mainHandler by lazy { Handler(mainLooper) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         val searchHistory = SearchHistory(getSharedPreferences(SHARED_PREFS, MODE_PRIVATE))
-        noTrackLayout = findViewById<LinearLayout>(R.id.error_loading_tracks_layout)
+        noTrackLayout = findViewById(R.id.error_loading_tracks_layout)
 
-        badConnectionErrorLayout = findViewById<LinearLayout>(R.id.error_bad_connection_layout)
+        badConnectionErrorLayout = findViewById(R.id.error_bad_connection_layout)
 
         rcView = findViewById(R.id.track_rcView)
         rcView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rcView.adapter = trackAdapter
+
         val btnBack = findViewById<TextView>(R.id.btn_back_search)
         btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        progressBarSearch = findViewById(R.id.progress_bar_search)
+
         searchEditText = findViewById(R.id.search_edit_text)
         searchEditText.setText(savedEditTextValue ?: "")
+
         val clearTextBtn = findViewById<TextView>(R.id.btn_clear_edit_text)
 
         clearTextBtn.setOnClickListener {
@@ -69,6 +79,7 @@ class SearchActivity : AppCompatActivity() {
             clearEditTextFocus()
             noTrackLayout.visibility = GONE
             badConnectionErrorLayout.visibility = GONE
+            mainHandler.removeCallbacks(getTrackListRunnable)
             trackList.clear()
             trackList.addAll(searchHistory.listOfHistory.reversed())
             trackAdapter.notifyDataSetChanged()
@@ -91,6 +102,11 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.clearTrackHistory()
             isHistoryVisible(false)
         }
+
+        getTrackListRunnable = Runnable {
+            getTrackList()
+        }
+
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -99,6 +115,7 @@ class SearchActivity : AppCompatActivity() {
                 savedEditTextValue = input
                 if (input.isEmpty()) {
                     clearTextBtn.visibility = GONE
+                    mainHandler.removeCallbacks(getTrackListRunnable)
                     trackList.clear()
                     trackList.addAll(searchHistory.listOfHistory.reversed())
                     trackAdapter.notifyDataSetChanged()
@@ -106,6 +123,7 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     clearTextBtn.visibility = VISIBLE
                     isHistoryVisible(false)
+                    debounceSearchTrack(SEARCH_EDIT_TEXT_TRACK_DELAY)
                 }
             }
 
@@ -118,21 +136,23 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 clearEditTextFocus()
                 if (searchEditText.text.isNotEmpty())
-                    getTrackList()
+                    debounceSearchTrack(SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY)
                 true
             } else false
         }
 
         val retrySearchBtn = findViewById<Button>(R.id.retry_search)
         retrySearchBtn.setOnClickListener {
-            getTrackList()
+            debounceSearchTrack(SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY)
         }
 
         trackAdapter.onClickCallback = { track ->
-            searchHistory.addTrackToHistory(track)
-            val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra(PLAY_TRACK, Gson().toJson(track))
-            startActivity(intent)
+            if (!debounceTrackItemClicked()) {
+                searchHistory.addTrackToHistory(track)
+                val intent = Intent(this, PlayerActivity::class.java)
+                intent.putExtra(PLAY_TRACK, track)
+                startActivity(intent)
+            }
         }
 
 
@@ -166,6 +186,7 @@ class SearchActivity : AppCompatActivity() {
         val historyText = findViewById<TextView>(R.id.your_search)
         clearHistoryBtn.visibility = GONE
         historyText.visibility = GONE
+        progressBarSearch.visibility = VISIBLE
         itunesService.search(searchEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
@@ -194,6 +215,7 @@ class SearchActivity : AppCompatActivity() {
                             clearEditTextFocus()
                         }
                     }
+                    progressBarSearch.visibility = GONE
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
@@ -201,14 +223,32 @@ class SearchActivity : AppCompatActivity() {
                     rcView.visibility = GONE
                     badConnectionErrorLayout.visibility = VISIBLE
                     noTrackLayout.visibility = GONE
+                    progressBarSearch.visibility = GONE
                     clearEditTextFocus()
                 }
 
             })
     }
 
+    private fun debounceSearchTrack(delay: Long) {
+        mainHandler.removeCallbacks(getTrackListRunnable)
+        mainHandler.postDelayed(getTrackListRunnable, delay)
+    }
+
+    private fun debounceTrackItemClicked(): Boolean {
+        val currentIsTrackItemClicked = isTrackItemClicked
+        if (!currentIsTrackItemClicked) {
+            isTrackItemClicked = true
+            mainHandler.postDelayed({ isTrackItemClicked = false }, TRACK_ITEM_CLICKED_DELAY)
+        }
+        return currentIsTrackItemClicked
+    }
+
 
     companion object {
+        private const val SEARCH_EDIT_TEXT_TRACK_DELAY = 2000L
+        private const val SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY = 0L
+        private const val TRACK_ITEM_CLICKED_DELAY = 500L
         const val EDIT_TEXT_VALUE_KEY = "EDIT_TEXT_VALUE_KEY"
         const val PLAY_TRACK = "PLAY_TRACK"
     }
