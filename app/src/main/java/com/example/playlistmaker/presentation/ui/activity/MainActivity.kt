@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 
 class MainActivity : AppCompatActivity() {
+
     private var canItemBeClicked = true
     private val handler by lazy { Handler(mainLooper) }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,8 +29,7 @@ class MainActivity : AppCompatActivity() {
         val searchBtnClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) = if (debounceItemClick()) startActivity(
                 Intent(
-                    this@MainActivity,
-                    SearchActivity::class.java
+                    this@MainActivity, SearchActivity::class.java
                 )
             ) else {
             }

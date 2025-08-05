@@ -3,22 +3,13 @@ package com.example.playlistmaker.data.network
 import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.dto.SongsRequest
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitNetworkClient : NetworkClient {
-    private val baseUrl = "https://itunes.apple.com"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val itunesService = retrofit.create(ITunesService::class.java)
-
+class RetrofitNetworkClient(private val iTunesService: ITunesService) : NetworkClient {
     override fun sendRequest(dto: Any): Response {
         when (dto) {
             is SongsRequest -> {
                 try {
-                    val response = itunesService.searchSongs(dto.songName).execute()
+                    val response = iTunesService.searchSongs(dto.songName).execute()
 
                     val body = response.body() ?: Response()
 

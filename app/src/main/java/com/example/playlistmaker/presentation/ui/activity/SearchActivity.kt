@@ -32,14 +32,12 @@ class SearchActivity : AppCompatActivity() {
     private val getTrackListRunnable = Runnable { getTrackList() }
     private val mainHandler by lazy { Handler(mainLooper) }
 
-    private lateinit var songsInteractor: SongsInteractor
+    private val songsInteractor by lazy { Creator.provideSongsInteractor() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        songsInteractor = Creator.provideSongsInteractor()
 
         binding.trackRcView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -146,8 +144,7 @@ class SearchActivity : AppCompatActivity() {
         binding.progressBarSearch.visibility = VISIBLE
         trackList.clear()
         val handler = Handler(mainLooper)
-        songsInteractor.loadSongsFromApi(
-            binding.searchEditText.text.toString(),
+        songsInteractor.loadSongsFromApi(binding.searchEditText.text.toString(),
             object : SongsInteractor.TracksConsumer {
                 override fun consume(response: ResponseStatus<List<Song>>) {
                     handler.post {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
@@ -55,6 +56,13 @@ class SettingsActivity : AppCompatActivity() {
         binding.themeSwitch.isChecked = themeInteractor.getCurrentTheme()
         binding.themeSwitch.setOnCheckedChangeListener { _, isChecked ->
             themeInteractor.switchTheme(isChecked)
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+            )
         }
     }
 }
