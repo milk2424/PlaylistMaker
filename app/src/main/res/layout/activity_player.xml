@@ -43,7 +43,7 @@
             />
 
         <ImageView
-            android:id="@+id/track_image"
+            android:id="@+id/song_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="46dp"
@@ -55,7 +55,7 @@
             />
 
         <TextView
-            android:id="@+id/track_name"
+            android:id="@+id/song_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -67,12 +67,12 @@
             android:textSize="22sp"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
             app:layout_constraintStart_toEndOf="@id/left_guideline"
-            app:layout_constraintTop_toBottomOf="@id/track_image"
+            app:layout_constraintTop_toBottomOf="@id/song_image"
             tools:text="Yesterday (Remastered 2009)"
             />
 
         <TextView
-            android:id="@+id/track_artist"
+            android:id="@+id/song_artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -84,7 +84,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
             app:layout_constraintStart_toEndOf="@id/left_guideline"
-            app:layout_constraintTop_toBottomOf="@id/track_name"
+            app:layout_constraintTop_toBottomOf="@id/song_name"
             tools:text="The Beatles"
             />
 
@@ -97,7 +97,7 @@
             android:src="@drawable/btn_start_player"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
             app:layout_constraintStart_toEndOf="@id/left_guideline"
-            app:layout_constraintTop_toBottomOf="@id/track_artist"
+            app:layout_constraintTop_toBottomOf="@id/song_artist"
             app:tint="@color/player_track_btn_play_bg_color"
             />
 
@@ -131,7 +131,7 @@
             />
 
         <TextView
-            android:id="@+id/current_track_time"
+            android:id="@+id/current_song_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -180,7 +180,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@id/left_category_guideline"
             app:layout_constraintTag="category_duration"
-            app:layout_constraintTop_toBottomOf="@id/current_track_time"
+            app:layout_constraintTop_toBottomOf="@id/current_song_time"
             />
 
 

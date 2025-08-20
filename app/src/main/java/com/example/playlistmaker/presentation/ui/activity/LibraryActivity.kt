@@ -1,10 +1,8 @@
-package com.example.playlistmaker.ui.activity
+package com.example.playlistmaker.presentation.ui.activity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 
 class LibraryActivity : AppCompatActivity() {
