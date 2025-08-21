@@ -35,7 +35,7 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        currentTrack = IntentCompat.getParcelableExtra(intent, PLAY_TRACK, Song::class.java)
+        currentTrack = IntentCompat.getSerializableExtra(intent, PLAY_TRACK, Song::class.java)
 
         binding.songName.text = currentTrack?.trackName
 
@@ -76,20 +76,13 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.currentTimeLiveData().observe(this) { time ->
-            binding.currentSongTime.text = time
-        }
-
         viewModel.playerStateLiveData().observe(this) { state ->
+            binding.currentSongTime.text = state.time
             when (state) {
-                PlayerState.PLAYING, PlayerState.DEFAULT -> binding.btnPlay.setImageResource(R.drawable.btn_pause_player)
-                PlayerState.PAUSED, PlayerState.PREPARED -> binding.btnPlay.setImageResource(R.drawable.btn_start_player)
+                is PlayerState.Playing, is PlayerState.Default -> binding.btnPlay.setImageResource(R.drawable.btn_pause_player)
+                is PlayerState.Paused, is PlayerState.Prepared -> binding.btnPlay.setImageResource(R.drawable.btn_start_player)
             }
         }
-
-        viewModel.preparePlayer()
-
-
     }
 
     private fun debouncePlayButton(): Boolean {

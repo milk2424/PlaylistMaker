@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.search.api
+package com.example.playlistmaker.domain.search.repository
 
 import com.example.playlistmaker.domain.search.model.ResponseStatus
 

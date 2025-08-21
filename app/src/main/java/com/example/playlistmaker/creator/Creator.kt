@@ -1,21 +1,22 @@
 package com.example.playlistmaker.creator
 
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.example.playlistmaker.App
 import com.example.playlistmaker.App.Companion.SHARED_PREFS
 import com.example.playlistmaker.data.search.NetworkClient
-import com.example.playlistmaker.data.search.SongsRepositoryImpl
+import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.data.search.impl.SongsRepositoryImpl
 import com.example.playlistmaker.data.search.network.ITunesService
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.settings.impl.SettingsRepositoryImpl
 import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
 import com.example.playlistmaker.data.sharing.impl.SharingRepositoryImpl
-import com.example.playlistmaker.domain.search.api.SongsRepository
-import com.example.playlistmaker.domain.search.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.domain.search.impl.SongsInteractorImpl
 import com.example.playlistmaker.domain.search.interactor.SongsInteractor
 import com.example.playlistmaker.domain.search.repository.SearchHistoryRepository
+import com.example.playlistmaker.domain.search.repository.SongsRepository
 import com.example.playlistmaker.domain.settings.SettingsRepository
 import com.example.playlistmaker.domain.settings.impl.SettingsInteractorImpl
 import com.example.playlistmaker.domain.settings.interactor.SettingsInteractor
@@ -39,6 +40,8 @@ object Creator {
     fun provideSharingInteractor(): SharingInteractor {
         return SharingInteractorImpl(getExternalNavigator(), getSharingRepository())
     }
+
+    fun provideMediaPlayer(): MediaPlayer = MediaPlayer()
 
     private fun getThemeRepository(): SettingsRepository {
         return SettingsRepositoryImpl(getSharedPreferences())
