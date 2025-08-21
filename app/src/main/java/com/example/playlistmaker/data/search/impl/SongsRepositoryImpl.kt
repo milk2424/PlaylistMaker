@@ -1,8 +1,9 @@
-package com.example.playlistmaker.data.search
+package com.example.playlistmaker.data.search.impl
 
+import com.example.playlistmaker.data.search.NetworkClient
 import com.example.playlistmaker.data.search.dto.SongsRequest
 import com.example.playlistmaker.data.search.dto.SongsResponse
-import com.example.playlistmaker.domain.search.api.SongsRepository
+import com.example.playlistmaker.domain.search.repository.SongsRepository
 import com.example.playlistmaker.domain.search.model.ResponseStatus
 import com.example.playlistmaker.domain.search.model.Song
 
