@@ -11,23 +11,19 @@ import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.search.SongState
 import com.example.playlistmaker.presentation.view_model.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
 
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this, SearchViewModel.getFactory()
-        )[SearchViewModel::class.java]
-    }
+    private val viewModel: SearchViewModel by viewModel()
 
     private var savedEditTextValue: String? = ""
 
