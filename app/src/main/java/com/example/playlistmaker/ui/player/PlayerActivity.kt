@@ -5,7 +5,6 @@ import android.os.Handler
 import android.view.View.GONE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -17,16 +16,16 @@ import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMap
 import com.example.playlistmaker.presentation.utils.player.PlayerState
 import com.example.playlistmaker.presentation.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.search.SearchActivity.Companion.PLAY_TRACK
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
     private var currentTrack: Song? = null
     private var isButtonPlayClicked = false
 
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this, PlayerViewModel.getFactory(currentTrack?.previewUrl)
-        ).get(PlayerViewModel::class.java)
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(currentTrack?.previewUrl)
     }
 
     private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(mainLooper) }

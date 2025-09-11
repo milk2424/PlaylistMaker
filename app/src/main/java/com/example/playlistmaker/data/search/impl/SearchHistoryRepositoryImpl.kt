@@ -5,7 +5,10 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.domain.search.repository.SearchHistoryRepository
 import com.google.gson.Gson
 
-class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) :
+class SearchHistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) :
     SearchHistoryRepository {
     private var _listOfHistory = mutableListOf<Song>()
 
@@ -13,7 +16,7 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
 
     override fun loadSongHistory(): List<Song> {
         val json = sharedPreferences.getString(TRACK_HISTORY, "")
-        _listOfHistory = if (!json.isNullOrEmpty()) Gson().fromJson(json, Array<Song>::class.java)
+        _listOfHistory = if (!json.isNullOrEmpty()) gson.fromJson(json, Array<Song>::class.java)
             .toMutableList()
         else mutableListOf()
         return listOfHistory
@@ -27,7 +30,7 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
                 removeAt(0)
             }
         }
-        sharedPreferences.edit().putString(TRACK_HISTORY, Gson().toJson(listOfHistory)).apply()
+        sharedPreferences.edit().putString(TRACK_HISTORY, gson.toJson(listOfHistory)).apply()
     }
 
     override fun clearSongHistory() {

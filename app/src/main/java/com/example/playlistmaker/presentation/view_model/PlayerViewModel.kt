@@ -6,26 +6,12 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 import com.example.playlistmaker.presentation.utils.player.PlayerState
-import java.io.IOException
 
 class PlayerViewModel(private val songUrl: String, private val mediaPlayer: MediaPlayer) :
     ViewModel() {
     companion object {
-        fun getFactory(songUrl: String?): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val mediaPlayer = Creator.provideMediaPlayer()
-                if (songUrl != null) PlayerViewModel(
-                    songUrl, mediaPlayer
-                ) else throw IOException("songUrl is null")
-            }
-        }
-
         private const val GET_CURRENT_TIME_DELAY = 200L
     }
 
