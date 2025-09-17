@@ -109,7 +109,7 @@
 
                 <ImageView
                     android:id="@+id/error_loading_tracks_image"
-                    style="@style/emptyTrackListError"
+                    style="@style/emptySongListError"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -125,7 +125,6 @@
             </LinearLayout>
 
             <LinearLayout
-
                 android:id="@+id/error_bad_connection_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
