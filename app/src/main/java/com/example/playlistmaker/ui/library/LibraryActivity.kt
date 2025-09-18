@@ -8,7 +8,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class LibraryActivity : AppCompatActivity() {
 
-    private val binding by lazy { ActivityLibraryBinding.inflate(layoutInflater) }
+    private val binding by lazy(mode = LazyThreadSafetyMode.NONE) {
+        ActivityLibraryBinding.inflate(layoutInflater)
+    }
 
     private lateinit var tabLayoutMediator: TabLayoutMediator
 
