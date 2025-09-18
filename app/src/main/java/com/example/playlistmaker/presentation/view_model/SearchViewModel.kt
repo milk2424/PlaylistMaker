@@ -33,7 +33,7 @@ class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel(
         songStateMutableLiveData.value = Loading
         songsInteractor.loadSongsFromApi(
             songName = songName,
-            object : SongsInteractor.TracksConsumer {
+            consumer = object : SongsInteractor.TracksConsumer {
                 override fun consume(response: ResponseStatus) {
                     when (response) {
                         is ResponseStatus.Empty -> songStateMutableLiveData.postValue(Empty)
@@ -43,6 +43,7 @@ class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel(
                         )
                     }
                 }
-            })
+            }
+        )
     }
 }

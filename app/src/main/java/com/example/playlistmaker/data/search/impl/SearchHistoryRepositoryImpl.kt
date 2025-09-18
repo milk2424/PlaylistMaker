@@ -10,6 +10,7 @@ class SearchHistoryRepositoryImpl(
     private val gson: Gson
 ) :
     SearchHistoryRepository {
+
     private var _listOfHistory = mutableListOf<Song>()
 
     private val listOfHistory: List<Song> get() = _listOfHistory.toList()
