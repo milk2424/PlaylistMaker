@@ -2,25 +2,28 @@ package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.IntentCompat
+import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerDpToPxMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerImageMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 import com.example.playlistmaker.presentation.utils.player.PlayerState
 import com.example.playlistmaker.presentation.view_model.PlayerViewModel
-import com.example.playlistmaker.ui.search.SearchActivity.Companion.PLAY_TRACK
+import com.example.playlistmaker.ui.FragmentBinding
+import com.example.playlistmaker.ui.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlayerActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityPlayerBinding
+class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     private var currentTrack: Song? = null
     private var isButtonPlayClicked = false
 
@@ -28,13 +31,12 @@ class PlayerActivity : AppCompatActivity() {
         parametersOf(currentTrack?.previewUrl)
     }
 
-    private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(mainLooper) }
+    private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        currentTrack = IntentCompat.getSerializableExtra(intent, PLAY_TRACK, Song::class.java)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        currentTrack =
+            requireArguments().getSerializable(SearchFragment.PLAY_TRACK, Song::class.java)
 
         binding.songName.text = currentTrack?.trackName
 
@@ -61,12 +63,12 @@ class PlayerActivity : AppCompatActivity() {
         Glide.with(binding.songImage).load(PlayerImageMapper.map(currentTrack!!.artworkUrl100))
             .transform(
                 RoundedCorners(
-                    PlayerDpToPxMapper.map(8f, this)
+                    PlayerDpToPxMapper.map(8f, requireContext())
                 )
             ).placeholder(R.drawable.player_no_track_image).into(binding.songImage)
 
         binding.arrowBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
 
         binding.btnPlay.setOnClickListener {
@@ -75,7 +77,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.playerStateLiveData().observe(this) { state ->
+        viewModel.playerStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.currentSongTime.text = state.time
             when (state) {
                 is PlayerState.Playing, is PlayerState.Default -> binding.btnPlay.setImageResource(R.drawable.btn_pause_player)
@@ -97,6 +99,9 @@ class PlayerActivity : AppCompatActivity() {
         super.onPause()
         viewModel.onPause()
     }
+
+    override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
+        FragmentPlayerBinding.inflate(layoutInflater, container, false)
 
     companion object {
         private const val BUTTON_PLAY_DELAY = 200L

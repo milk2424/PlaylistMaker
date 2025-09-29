@@ -14,8 +14,12 @@
         <item name="android:src">@drawable/bad_connection_dark</item>
     </style>
 
+
     <color name="previous_screen_text_color">@color/white</color>
     <color name="main_screen_bg">@color/main_dark</color>
+
+    <color name="bottom_nav_ic_color">@color/white</color>
+
     <color name="settings_screen_bg">@color/main_dark</color>
     <color name="settings_text_color">@color/white</color>
     <color name="settings_icon_color">@color/white</color>

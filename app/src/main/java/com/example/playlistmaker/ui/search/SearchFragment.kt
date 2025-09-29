@@ -1,27 +1,30 @@
 package com.example.playlistmaker.ui.search
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.search.SongState
 import com.example.playlistmaker.presentation.view_model.SearchViewModel
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.ui.FragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-
-    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
+class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
 
     private val viewModel: SearchViewModel by viewModel()
 
@@ -32,20 +35,18 @@ class SearchActivity : AppCompatActivity() {
     private var isSongItemCanBeClicked = true
     private val getSongListRunnable =
         Runnable { viewModel.loadSongsFromApi(binding.searchEditText.text.toString()) }
-    private val mainHandler by lazy { Handler(mainLooper) }
+    private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
+        FragmentSearchBinding.inflate(layoutInflater, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.trackRcView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.trackRcView.adapter = songAdapter
-
-        binding.btnBackSearch.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
 
         binding.btnClearEditText.setOnClickListener {
             binding.searchEditText.setText("")
@@ -103,13 +104,15 @@ class SearchActivity : AppCompatActivity() {
         songAdapter.onClickCallback = { song ->
             if (debounceTrackItemClicked()) {
                 viewModel.addSongToHistory(song)
-                val intent = Intent(this, PlayerActivity::class.java)
-                intent.putExtra(PLAY_TRACK, song)
-                startActivity(intent)
+
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_playerFragment,
+                    bundleOf(PLAY_TRACK to song)
+                )
             }
         }
 
-        viewModel.songStateLiveData().observe(this) { songState ->
+        viewModel.songStateLiveData().observe(viewLifecycleOwner) { songState ->
             setUIAfterSongResponse(songState)
         }
     }
@@ -119,9 +122,9 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(EDIT_TEXT_VALUE_KEY, savedEditTextValue)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedEditTextValue = savedInstanceState.getString(EDIT_TEXT_VALUE_KEY)
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedEditTextValue = savedInstanceState?.getString(EDIT_TEXT_VALUE_KEY) ?: ""
     }
 
     private fun debounceSearchTrack(delay: Long) {
@@ -195,7 +198,7 @@ class SearchActivity : AppCompatActivity() {
     private fun clearEditTextFocus() {
         binding.searchEditText.clearFocus()
         val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 

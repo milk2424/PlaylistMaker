@@ -1,25 +1,23 @@
 package com.example.playlistmaker.ui.library
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityLibraryBinding
+import com.example.playlistmaker.databinding.FragmentLibraryBinding
+import com.example.playlistmaker.ui.FragmentBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
-class LibraryActivity : AppCompatActivity() {
+class LibraryFragment : FragmentBinding<FragmentLibraryBinding>() {
 
-    private val binding by lazy(mode = LazyThreadSafetyMode.NONE) {
-        ActivityLibraryBinding.inflate(layoutInflater)
-    }
+    override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
+        FragmentLibraryBinding.inflate(layoutInflater, container, false)
 
     private lateinit var tabLayoutMediator: TabLayoutMediator
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        binding.btnBackLibrary.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.viewPager.adapter = LibraryViewPagerAdapter(supportFragmentManager, lifecycle)
         tabLayoutMediator =
             TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->

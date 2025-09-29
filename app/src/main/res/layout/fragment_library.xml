@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/library_tab_bg_color"
-    tools:context=".ui.library.LibraryActivity">
+    tools:context="com.example.playlistmaker.ui.library.LibraryFragment">
 
 
     <TextView
         android:id="@+id/btn_back_library"
         style="@style/PreviousScreenTextview"
         android:text="@string/library"
+        app:drawableStartCompat="@null"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,9 +26,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_back_library"
         app:layout_constraintVertical_bias="0"
-        app:tabTextAppearance="@style/TabLayoutTextAppearance"
         app:tabIndicator="@drawable/tab_indicator"
         app:tabIndicatorColor="@color/library_tab_text_color"
+        app:tabTextAppearance="@style/TabLayoutTextAppearance"
         app:tabTextColor="@color/library_tab_text_color" />
 
 

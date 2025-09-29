@@ -15,7 +15,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         startKoin {
             androidContext(this@App)
             modules(dataModule, interactorModule, repositoryModule, viewModelModule)

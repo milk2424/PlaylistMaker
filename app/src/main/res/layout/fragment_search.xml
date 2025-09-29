@@ -3,29 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/settings_screen_bg"
-    android:orientation="vertical"
-    >
+    tools:context="com.example.playlistmaker.ui.search.SearchFragment"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/btn_back_search"
             style="@style/PreviousScreenTextview"
             android:text="@string/search"
-            />
+            app:drawableStartCompat="@null" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/search_edit_text_bg"
-            >
+            android:background="@drawable/search_edit_text_bg">
 
             <EditText
                 android:id="@+id/search_edit_text"
@@ -51,8 +50,7 @@
                 android:textFontWeight="400"
                 android:textSize="16sp"
                 android:textStyle="normal"
-                app:cornerRadius="20dp"
-                />
+                app:cornerRadius="20dp" />
 
             <TextView
                 android:id="@+id/btn_clear_edit_text"
@@ -63,8 +61,7 @@
                 android:layout_marginVertical="12dp"
                 android:background="@drawable/btn_clear_edit_text"
                 android:backgroundTint="@color/search_edit_text_icon_color"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </FrameLayout>
 
         <TextView
@@ -78,13 +75,11 @@
             android:text="@string/your_search"
             android:textColor="@color/previous_screen_text_color"
             android:textFontWeight="500"
-            android:textSize="19sp"
-            />
+            android:textSize="19sp" />
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <ProgressBar
                 android:id="@+id/progress_bar_search"
@@ -93,8 +88,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="140dp"
                 android:indeterminateTint="@color/progress_bar_color"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <LinearLayout
 
@@ -104,24 +98,21 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="102dp"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/error_loading_tracks_image"
                     style="@style/emptySongListError"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    />
+                    android:layout_gravity="center" />
 
                 <TextView
                     android:id="@+id/error_loading_tracks_text"
                     style="@style/SearchErrorTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/empty_track_list_text"
-                    />
+                    android:text="@string/empty_track_list_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -131,16 +122,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="102dp"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/error_bad_connection_image"
                     style="@style/trackListLoadingError"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    />
+                    android:layout_gravity="center" />
 
                 <TextView
                     android:id="@+id/error_bad_connection_text"
@@ -149,30 +138,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginBottom="24dp"
-                    android:text="@string/bad_connection_error_text"
-                    />
+                    android:text="@string/bad_connection_error_text" />
 
                 <Button
                     android:id="@+id/retry_search"
                     style="@style/searchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    />
+                    android:layout_gravity="center" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/track_rcView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    />
+                    android:layout_weight="1" />
 
                 <Button
                     android:id="@+id/clear_search_history_btn"
@@ -183,8 +168,7 @@
                     android:layout_marginVertical="24dp"
                     android:backgroundTint="@color/previous_screen_text_color"
                     android:text="@string/clear_history"
-                    android:textAllCaps="false"
-                    />
+                    android:textAllCaps="false" />
             </LinearLayout>
 
         </FrameLayout>

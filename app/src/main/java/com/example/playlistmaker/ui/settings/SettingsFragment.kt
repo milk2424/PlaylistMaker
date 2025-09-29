@@ -1,32 +1,29 @@
 package com.example.playlistmaker.ui.settings
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.presentation.view_model.SettingsViewModel
+import com.example.playlistmaker.ui.FragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : FragmentBinding<FragmentSettingsBinding>() {
 
-    private lateinit var binding: ActivitySettingsBinding
 
     private val viewModel: SettingsViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-    }
 
-    override fun onStart() {
-        super.onStart()
+    override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
+        FragmentSettingsBinding.inflate(layoutInflater, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setListeners()
     }
 
     private fun setListeners() {
-        binding.settingsBackBtn.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
 
         binding.btnShareApp.setOnClickListener {
             viewModel.shareApp()
@@ -38,7 +35,7 @@ class SettingsActivity : AppCompatActivity() {
             viewModel.openTerms()
         }
 
-        viewModel.isNightLiveData().observe(this) { themeSettings ->
+        viewModel.isNightLiveData().observe(viewLifecycleOwner) { themeSettings ->
             binding.themeSwitch.isChecked = themeSettings.isNight
         }
 
@@ -46,4 +43,6 @@ class SettingsActivity : AppCompatActivity() {
             viewModel.switchTheme(isChecked)
         }
     }
+
+
 }
