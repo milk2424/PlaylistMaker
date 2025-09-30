@@ -13,10 +13,8 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.search.SongState
@@ -33,8 +31,9 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
     private val songAdapter = SongAdapter()
 
     private var isSongItemCanBeClicked = true
-    private val getSongListRunnable =
+    private val getSongListRunnable by lazy {
         Runnable { viewModel.loadSongsFromApi(binding.searchEditText.text.toString()) }
+    }
     private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
 
 
@@ -106,8 +105,7 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
                 viewModel.addSongToHistory(song)
 
                 findNavController().navigate(
-                    R.id.action_searchFragment_to_playerFragment,
-                    bundleOf(PLAY_TRACK to song)
+                    SearchFragmentDirections.actionSearchFragmentToPlayerFragment(song)
                 )
             }
         }

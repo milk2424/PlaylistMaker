@@ -33,7 +33,7 @@ class PlayerViewModel(private val songUrl: String, private val mediaPlayer: Medi
     private val playerStateMutableLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun playerStateLiveData(): LiveData<PlayerState> = playerStateMutableLiveData
 
-    fun preparePlayer() {
+    private fun preparePlayer() {
         mediaPlayer.setDataSource(songUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {

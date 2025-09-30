@@ -8,6 +8,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -19,7 +20,6 @@ import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMap
 import com.example.playlistmaker.presentation.utils.player.PlayerState
 import com.example.playlistmaker.presentation.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.FragmentBinding
-import com.example.playlistmaker.ui.search.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -33,10 +33,11 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
     private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
 
+    private val args by navArgs<PlayerFragmentArgs>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        currentTrack =
-            requireArguments().getSerializable(SearchFragment.PLAY_TRACK, Song::class.java)
+        currentTrack = args.song
 
         binding.songName.text = currentTrack?.trackName
 

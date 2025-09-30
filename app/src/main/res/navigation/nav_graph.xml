@@ -9,11 +9,10 @@
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.ui.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_playerFragment"
-            app:destination="@id/playerFragment"
-            />
+            app:destination="@id/playerFragment" />
     </fragment>
     <fragment
         android:id="@+id/libraryFragment"
@@ -29,7 +28,12 @@
         android:id="@+id/playerFragment"
         android:name="com.example.playlistmaker.ui.player.PlayerFragment"
         android:label="fragment_player"
-        tools:layout="@layout/fragment_player" />
+        tools:layout="@layout/fragment_player">
+        <argument
+            android:name="song"
+            app:argType="com.example.playlistmaker.domain.search.model.Song" />
+
+    </fragment>
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.example.playlistmaker.ui.library.playlist.PlaylistFragment"
