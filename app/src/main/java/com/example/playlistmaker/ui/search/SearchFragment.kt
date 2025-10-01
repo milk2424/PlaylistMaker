@@ -34,6 +34,7 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
     private val getSongListRunnable by lazy {
         Runnable { viewModel.loadSongsFromApi(binding.searchEditText.text.toString()) }
     }
+
     private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
 
 
@@ -42,7 +43,6 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.trackRcView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.trackRcView.adapter = songAdapter
@@ -57,6 +57,7 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
             viewModel.clearHistory()
             isHistoryVisible(false)
         }
+
 
         binding.searchEditText.apply {
             setText(savedEditTextValue ?: "")
@@ -200,9 +201,14 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
         inputMethodManager?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
         mainHandler.removeCallbacks(getSongListRunnable)
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        mainHandler.removeCallbacks(getSongListRunnable)
+        super.onDestroy()
     }
 
     companion object {

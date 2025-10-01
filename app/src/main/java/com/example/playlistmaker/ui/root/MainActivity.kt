@@ -11,7 +11,7 @@ import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.example.playlistmaker.ui.player.PlayerFragment
 
 class MainActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy(mode = LazyThreadSafetyMode.NONE) { ActivityMainBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
