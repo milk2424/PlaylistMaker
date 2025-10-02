@@ -3,28 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/settings_screen_bg"
-    android:orientation="vertical"
-    >
+    tools:context="com.example.playlistmaker.ui.settings.SettingsFragment"
+    android:orientation="vertical">
 
 
     <TextView
-        android:id="@+id/settings_back_btn"
         style="@style/PreviousScreenTextview"
         android:text="@string/settings"
-        />
+        app:drawableStartCompat="@null" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="12dp"
-        >
+        android:paddingHorizontal="12dp">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -35,8 +33,7 @@
                 android:text="@string/dark_theme"
                 android:textColor="@color/settings_text_color"
                 android:textFontWeight="400"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/theme_switch"
@@ -45,8 +42,7 @@
                 android:layout_gravity="end"
                 android:layout_marginVertical="10dp"
                 app:thumbTint="@drawable/custom_thumb"
-                app:trackTint="@drawable/custom_track"
-                />
+                app:trackTint="@drawable/custom_track" />
         </FrameLayout>
 
         <Button
@@ -55,8 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/share_app"
-            app:icon="@drawable/btn_share"
-            />
+            app:icon="@drawable/btn_share" />
 
         <Button
             android:id="@+id/btn_write_to_support"
@@ -64,8 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/support"
-            app:icon="@drawable/btn_support"
-            />
+            app:icon="@drawable/btn_support" />
 
 
         <Button
@@ -74,8 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/user_agreement"
-            app:icon="@drawable/btn_arrow_forward"
-            />
+            app:icon="@drawable/btn_arrow_forward" />
     </LinearLayout>
 
 

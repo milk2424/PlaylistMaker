@@ -1,5 +1,6 @@
 package com.example.playlistmaker.presentation.view_model
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.search.interactor.SongsInteractor
@@ -14,7 +15,8 @@ import com.example.playlistmaker.presentation.utils.search.SongState.Successful
 
 class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel() {
     private val songStateMutableLiveData = MutableLiveData<SongState>()
-    fun songStateLiveData() = songStateMutableLiveData
+
+    fun songStateLiveData(): LiveData<SongState> = songStateMutableLiveData
 
     init {
         loadHistory()

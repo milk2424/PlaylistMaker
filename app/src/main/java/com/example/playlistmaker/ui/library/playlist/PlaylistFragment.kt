@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
-import com.example.playlistmaker.utils.FragmentBinding
+import com.example.playlistmaker.ui.FragmentBinding
 
 
 class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
