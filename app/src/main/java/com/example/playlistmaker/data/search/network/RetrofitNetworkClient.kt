@@ -5,16 +5,15 @@ import com.example.playlistmaker.data.search.dto.Response
 import com.example.playlistmaker.data.search.dto.SongsRequest
 
 class RetrofitNetworkClient(private val iTunesService: ITunesService) : NetworkClient {
-    override fun sendRequest(dto: Any): Response {
+    override suspend fun sendRequest(dto: Any): Response {
         when (dto) {
             is SongsRequest -> {
                 try {
-                    val response = iTunesService.searchSongs(dto.songName).execute()
+                    val response = iTunesService.searchSongs(dto.songName)
 
-                    val body = response.body() ?: Response()
+                    return response.apply { responseCode = 200 }
 
-                    return body.apply { responseCode = response.code() }
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                     return Response().apply { responseCode = 500 }
                 }
             }

@@ -29,8 +29,9 @@ class LibraryFragment : FragmentBinding<FragmentLibraryBinding>() {
         tabLayoutMediator.attach()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        binding.viewPager.adapter = null
         tabLayoutMediator.detach()
+        super.onDestroyView()
     }
 }

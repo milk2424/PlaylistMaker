@@ -3,6 +3,7 @@ package com.example.playlistmaker.presentation.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.search.interactor.SongsInteractor
 import com.example.playlistmaker.domain.search.model.ResponseStatus
 import com.example.playlistmaker.domain.search.model.Song
@@ -12,6 +13,8 @@ import com.example.playlistmaker.presentation.utils.search.SongState.History
 import com.example.playlistmaker.presentation.utils.search.SongState.Loading
 import com.example.playlistmaker.presentation.utils.search.SongState.NetworkError
 import com.example.playlistmaker.presentation.utils.search.SongState.Successful
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel() {
     private val songStateMutableLiveData = MutableLiveData<SongState>()
@@ -32,20 +35,23 @@ class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel(
     }
 
     fun loadSongsFromApi(songName: String) {
-        songStateMutableLiveData.value = Loading
-        songsInteractor.loadSongsFromApi(
-            songName = songName,
-            consumer = object : SongsInteractor.TracksConsumer {
-                override fun consume(response: ResponseStatus) {
+        songStateMutableLiveData.postValue(Loading)
+        viewModelScope.launch(Dispatchers.IO) {
+            songsInteractor
+                .loadSongsFromApi(songName = songName)
+                .collect { response ->
                     when (response) {
                         is ResponseStatus.Empty -> songStateMutableLiveData.postValue(Empty)
-                        is ResponseStatus.Error -> songStateMutableLiveData.postValue(NetworkError)
+                        is ResponseStatus.Error -> songStateMutableLiveData.postValue(
+                            NetworkError
+                        )
+
                         is ResponseStatus.Successful -> songStateMutableLiveData.postValue(
                             Successful(response.songs)
                         )
                     }
                 }
-            }
-        )
+        }
     }
+
 }
