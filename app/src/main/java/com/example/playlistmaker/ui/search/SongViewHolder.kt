@@ -23,7 +23,6 @@ class SongViewHolder(val songView: View) : RecyclerView.ViewHolder(songView) {
         imageRoundedCornersSize = PlayerDpToPxMapper.map(
             2f, songView.context
         )
-        Log.d("MAIN_TAG", "$imageRoundedCornersSize")
     }
 
     fun bind(song: Song) {
