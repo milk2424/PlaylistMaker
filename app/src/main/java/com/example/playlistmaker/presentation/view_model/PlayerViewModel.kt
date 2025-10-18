@@ -1,14 +1,13 @@
 package com.example.playlistmaker.presentation.view_model
 
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 import com.example.playlistmaker.presentation.utils.player.PlayerState
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -21,6 +20,8 @@ class PlayerViewModel(private val songUrl: String, private val mediaPlayer: Medi
     init {
         preparePlayer()
     }
+
+    private var observeCurrentTimeJob: Job? = null
 
     private val playerStateMutableLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun playerStateLiveData(): LiveData<PlayerState> = playerStateMutableLiveData
@@ -62,7 +63,8 @@ class PlayerViewModel(private val songUrl: String, private val mediaPlayer: Medi
     }
 
     private fun observeCurrentTime() {
-        viewModelScope.launch(Dispatchers.IO) {
+        observeCurrentTimeJob?.cancel()
+        observeCurrentTimeJob = viewModelScope.launch {
             while (mediaPlayer.isPlaying) {
                 delay(GET_CURRENT_TIME_DELAY)
                 if (mediaPlayer.isPlaying)

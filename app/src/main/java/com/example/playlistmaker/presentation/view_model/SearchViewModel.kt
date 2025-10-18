@@ -14,10 +14,14 @@ import com.example.playlistmaker.presentation.utils.search.SongState.Loading
 import com.example.playlistmaker.presentation.utils.search.SongState.NetworkError
 import com.example.playlistmaker.presentation.utils.search.SongState.Successful
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel() {
     private val songStateMutableLiveData = MutableLiveData<SongState>()
+
+    private var loadSongsJob: Job? = null
 
     fun songStateLiveData(): LiveData<SongState> = songStateMutableLiveData
 
@@ -34,9 +38,11 @@ class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel(
         songStateMutableLiveData.postValue(History(songsInteractor.loadSongHistory().reversed()))
     }
 
-    fun loadSongsFromApi(songName: String) {
+    fun loadSongsFromApi(songName: String, searchDelay: Long) {
+        loadSongsJob?.cancel()
         songStateMutableLiveData.postValue(Loading)
-        viewModelScope.launch(Dispatchers.IO) {
+        loadSongsJob = viewModelScope.launch(Dispatchers.IO) {
+            delay(searchDelay)
             songsInteractor
                 .loadSongsFromApi(songName = songName)
                 .collect { response ->

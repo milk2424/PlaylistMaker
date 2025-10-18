@@ -20,10 +20,7 @@ import com.example.playlistmaker.presentation.utils.search.SongState
 import com.example.playlistmaker.presentation.view_model.SearchViewModel
 import com.example.playlistmaker.ui.FragmentBinding
 import debounce
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
@@ -34,7 +31,7 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
 
     private var songAdapter = SongAdapter()
 
-    private lateinit var onItemClick:(Song)->Unit
+    private lateinit var onItemClick: (Song) -> Unit
 
     private var loadSongsJob: Job? = null
 
@@ -58,7 +55,11 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
             isHistoryVisible(false)
         }
 
-        onItemClick = debounce<Song>(TRACK_ITEM_CLICKED_DELAY, viewLifecycleOwner.lifecycleScope, false) { song ->
+        onItemClick = debounce<Song>(
+            TRACK_ITEM_CLICKED_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { song ->
             viewModel.addSongToHistory(song)
             findNavController().navigate(
                 SearchFragmentDirections.actionSearchFragmentToPlayerFragment(
@@ -88,7 +89,10 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
                         binding.btnClearEditText.visibility = GONE
                     } else {
                         binding.btnClearEditText.visibility = VISIBLE
-                        loadSongs(SEARCH_EDIT_TEXT_TRACK_DELAY)
+                        viewModel.loadSongsFromApi(
+                            getSongCurrentInput(),
+                            SEARCH_EDIT_TEXT_TRACK_DELAY
+                        )
                     }
                 }
 
@@ -97,7 +101,8 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     clearEditTextFocus()
-                    if (binding.searchEditText.text.isNotEmpty()) loadSongs(
+                    if (binding.searchEditText.text.isNotEmpty()) viewModel.loadSongsFromApi(
+                        getSongCurrentInput(),
                         SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY
                     )
                     true
@@ -106,7 +111,10 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
         }
 
         binding.retrySearch.setOnClickListener {
-            loadSongs(SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY)
+            viewModel.loadSongsFromApi(
+                getSongCurrentInput(),
+                SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY
+            )
         }
 
         songAdapter.onClickCallback = { song ->
@@ -189,14 +197,7 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
         inputMethodManager?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
-    private fun loadSongs(searchDelay: Long = SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY) {
-        loadSongsJob?.cancel()
-        loadSongsJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            delay(searchDelay)
-            val songName = binding.searchEditText.text.toString()
-            viewModel.loadSongsFromApi(songName)
-        }
-    }
+    private fun getSongCurrentInput() = binding.searchEditText.text.toString()
 
     companion object {
         private const val SEARCH_EDIT_TEXT_TRACK_DELAY = 2000L
