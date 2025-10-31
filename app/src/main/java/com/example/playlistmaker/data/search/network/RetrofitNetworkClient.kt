@@ -17,9 +17,7 @@ class RetrofitNetworkClient(private val iTunesService: ITunesService) : NetworkC
                     return Response().apply { responseCode = 500 }
                 }
             }
-
             else -> return Response().apply { responseCode = 400 }
         }
     }
-
 }

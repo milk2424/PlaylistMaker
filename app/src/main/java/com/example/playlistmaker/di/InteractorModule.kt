@@ -1,6 +1,5 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.data.search.impl.SongsRepositoryImpl
 import com.example.playlistmaker.data.sharing.impl.ExternalNavigatorImpl
 import com.example.playlistmaker.data.sharing.impl.SharingRepositoryImpl
 import com.example.playlistmaker.domain.search.impl.SongsInteractorImpl
@@ -34,5 +33,4 @@ val interactorModule = module {
     single<SharingRepository> {
         SharingRepositoryImpl(androidContext().applicationContext)
     }
-
 }

@@ -1,7 +1,12 @@
-package com.example.playlistmaker.data.search.dto
+package com.example.playlistmaker.data.db.entity
 
-data class SongDto(
-    val trackId: String,
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "favourite_songs")
+data class SongEntity(
+    @PrimaryKey
+    val id: String,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,

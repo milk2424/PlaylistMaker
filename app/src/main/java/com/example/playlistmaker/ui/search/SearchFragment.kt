@@ -33,8 +33,6 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
 
     private lateinit var onItemClick: (Song) -> Unit
 
-    private var loadSongsJob: Job? = null
-
     override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
         FragmentSearchBinding.inflate(layoutInflater, container, false)
 
@@ -55,7 +53,7 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
             isHistoryVisible(false)
         }
 
-        onItemClick = debounce<Song>(
+        onItemClick = debounce(
             TRACK_ITEM_CLICKED_DELAY,
             viewLifecycleOwner.lifecycleScope,
             false
@@ -84,7 +82,6 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
                     val input = s.toString()
                     savedEditTextValue = input
                     if (input.isEmpty()) {
-                        loadSongsJob?.cancel()
                         viewModel.loadHistory()
                         binding.btnClearEditText.visibility = GONE
                     } else {

@@ -18,6 +18,7 @@ class SongsRepositoryImpl(private val networkClient: NetworkClient) : SongsRepos
         else if (response.responseCode == 200) {
             emit(ResponseStatus.Successful((response as SongsResponse).results.map {
                 Song(
+                    it.trackId,
                     it.trackName,
                     it.artistName,
                     it.trackTimeMillis,

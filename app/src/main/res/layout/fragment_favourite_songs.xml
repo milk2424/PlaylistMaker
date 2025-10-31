@@ -4,20 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    tools:context="com.example.playlistmaker.ui.library.favourite_songs.FavouriteSongsFragment">
+    tools:context="com.example.playlistmaker.ui.library.favourite_songs.FavouriteSongsFragment"
+    >
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="16dp"
+        android:id="@+id/favouriteSongsRCView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
     <LinearLayout
         android:id="@+id/error_empty_library_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="104dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <ImageView
             style="@style/emptySongListError"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,7 +38,8 @@
             android:text="@string/your_library_is_empty"
             android:textColor="@color/error_empty_song_library_text_color"
             android:textFontWeight="400"
-            android:textSize="19sp" />
+            android:textSize="19sp"
+            />
     </LinearLayout>
 
 </FrameLayout>

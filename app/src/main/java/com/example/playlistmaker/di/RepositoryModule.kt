@@ -2,9 +2,13 @@ package com.example.playlistmaker.di
 
 import android.content.Context.MODE_PRIVATE
 import com.example.playlistmaker.App.Companion.SHARED_PREFS
+import com.example.playlistmaker.data.favourite_songs.impl.FavouriteSongsRepositoryImpl
+import com.example.playlistmaker.data.player.impl.SongFavouriteStateRepositoryImpl
 import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.search.impl.SongsRepositoryImpl
 import com.example.playlistmaker.data.settings.impl.SettingsRepositoryImpl
+import com.example.playlistmaker.domain.favourite_songs.repository.FavouriteSongsRepository
+import com.example.playlistmaker.domain.player.repository.SongFavouriteStateRepository
 import com.example.playlistmaker.domain.search.repository.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.repository.SongsRepository
 import com.example.playlistmaker.domain.settings.SettingsRepository
@@ -23,6 +27,14 @@ val repositoryModule = module {
 
     single<SettingsRepository> {
         SettingsRepositoryImpl(get())
+    }
+
+    single<FavouriteSongsRepository> {
+        FavouriteSongsRepositoryImpl(get(), get())
+    }
+
+    single<SongFavouriteStateRepository> {
+        SongFavouriteStateRepositoryImpl(get(), get())
     }
 
     single {
