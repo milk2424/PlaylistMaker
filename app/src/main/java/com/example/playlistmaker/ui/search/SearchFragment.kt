@@ -19,8 +19,8 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.search.SongState
 import com.example.playlistmaker.presentation.view_model.SearchViewModel
 import com.example.playlistmaker.ui.FragmentBinding
+import com.example.playlistmaker.ui.song_rc_view.SongAdapter
 import debounce
-import kotlinx.coroutines.Job
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : FragmentBinding<FragmentSearchBinding>() {

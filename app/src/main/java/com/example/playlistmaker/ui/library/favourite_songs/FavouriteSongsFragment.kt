@@ -14,9 +14,9 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.favourite_songs.FavouriteSongsState
 import com.example.playlistmaker.presentation.view_model.FavouriteSongsViewModel
 import com.example.playlistmaker.ui.FragmentBinding
+import com.example.playlistmaker.ui.song_rc_view.SongAdapter
 import com.example.playlistmaker.ui.library.LibraryFragmentDirections
 import debounce
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -24,7 +24,7 @@ class FavouriteSongsFragment : FragmentBinding<FragmentFavouriteSongsBinding>() 
 
     private val viewModel: FavouriteSongsViewModel by viewModel()
 
-    private val adapter = FavouriteSongsAdapter()
+    private val adapter = SongAdapter()
 
     private var onItemClick: ((Song) -> Unit)? = null
 
@@ -35,15 +35,12 @@ class FavouriteSongsFragment : FragmentBinding<FragmentFavouriteSongsBinding>() 
         super.onViewCreated(view, savedInstanceState)
         binding.favouriteSongsRCView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.favouriteSongsRCView.adapter = adapter
-
 
         onItemClick = debounce(
             TRACK_ITEM_CLICKED_DELAY,
             viewLifecycleOwner.lifecycleScope,
             false
         ) { song ->
-            viewModel.addSongToHistory(song)
             findNavController().navigate(
                 LibraryFragmentDirections.actionLibraryFragmentToPlayerFragment(
                     song
@@ -51,13 +48,14 @@ class FavouriteSongsFragment : FragmentBinding<FragmentFavouriteSongsBinding>() 
             )
         }
 
+        adapter.onClickCallback = onItemClick
+
+        binding.favouriteSongsRCView.adapter = adapter
 
         viewModel.loadFavouriteSongs()
 
-        lifecycleScope.launch {
-            viewModel.favouriteSongsState.collect { state ->
-                renderState(state)
-            }
+        viewModel.observeFavouriteSongsState().observe(viewLifecycleOwner) { state ->
+            renderState(state)
         }
     }
 
@@ -70,18 +68,13 @@ class FavouriteSongsFragment : FragmentBinding<FragmentFavouriteSongsBinding>() 
             is FavouriteSongsState.Empty -> {
                 showEmpty()
             }
-
-            is FavouriteSongsState.Loading -> {
-
-            }
         }
     }
 
     private fun showContent(songs: List<Song>) {
+        adapter.resetAdapter(songs)
         binding.errorEmptyLibraryLayout.visibility = GONE
         binding.favouriteSongsRCView.visibility = VISIBLE
-        adapter.favouriteSongs = songs
-        adapter.notifyDataSetChanged()
     }
 
     private fun showEmpty() {

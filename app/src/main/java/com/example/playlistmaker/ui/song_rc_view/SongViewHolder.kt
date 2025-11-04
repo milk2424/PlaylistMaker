@@ -1,6 +1,5 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.ui.song_rc_view
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
