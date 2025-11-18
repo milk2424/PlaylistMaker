@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -20,15 +21,17 @@ import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMap
 import com.example.playlistmaker.presentation.utils.player.PlayerState
 import com.example.playlistmaker.presentation.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.FragmentBinding
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     private var currentTrack: Song? = null
     private var isButtonPlayClicked = false
+    private var isButtonSaveToFavouriteClicked = false
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(currentTrack?.previewUrl)
+        parametersOf(currentTrack)
     }
 
     private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
@@ -78,6 +81,18 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.isSongFavouriteState.collect { state ->
+                renderIsSongFavouriteState(state)
+            }
+        }
+
+
+        binding.btnSaveToFavorite.setOnClickListener {
+            if (!debounceSaveToFavouriteButton())
+                viewModel.switchIsSongFavouriteState()
+        }
+
         viewModel.playerStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.currentSongTime.text = state.time
             when (state) {
@@ -91,9 +106,25 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         val currentIsButtonPlayClicked = isButtonPlayClicked
         if (!currentIsButtonPlayClicked) {
             isButtonPlayClicked = true
-            mainHandler.postDelayed({ isButtonPlayClicked = false }, BUTTON_PLAY_DELAY)
+            mainHandler.postDelayed({ isButtonPlayClicked = false }, BUTTONS_DELAY)
         }
         return currentIsButtonPlayClicked
+    }
+
+
+    private fun debounceSaveToFavouriteButton(): Boolean {
+        val currentSaveToFavouriteButtonClicked = isButtonSaveToFavouriteClicked
+        if (!currentSaveToFavouriteButtonClicked) {
+            isButtonSaveToFavouriteClicked = true
+            mainHandler.postDelayed({ isButtonSaveToFavouriteClicked = false }, BUTTONS_DELAY)
+        }
+        return currentSaveToFavouriteButtonClicked
+    }
+
+    private fun renderIsSongFavouriteState(state: Boolean) {
+        val tint =
+            if (state) R.drawable.btn_save_to_favourite_active else R.drawable.btn_save_to_favorite_inactive
+        Glide.with(requireContext()).load(tint).into(binding.btnSaveToFavorite)
     }
 
     override fun onPause() {
@@ -105,6 +136,6 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         FragmentPlayerBinding.inflate(layoutInflater, container, false)
 
     companion object {
-        private const val BUTTON_PLAY_DELAY = 200L
+        private const val BUTTONS_DELAY = 200L
     }
 }

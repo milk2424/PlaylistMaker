@@ -19,8 +19,8 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.search.SongState
 import com.example.playlistmaker.presentation.view_model.SearchViewModel
 import com.example.playlistmaker.ui.FragmentBinding
+import com.example.playlistmaker.ui.song_rc_view.SongAdapter
 import debounce
-import kotlinx.coroutines.Job
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
@@ -32,8 +32,6 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
     private var songAdapter = SongAdapter()
 
     private lateinit var onItemClick: (Song) -> Unit
-
-    private var loadSongsJob: Job? = null
 
     override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
         FragmentSearchBinding.inflate(layoutInflater, container, false)
@@ -55,7 +53,7 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
             isHistoryVisible(false)
         }
 
-        onItemClick = debounce<Song>(
+        onItemClick = debounce(
             TRACK_ITEM_CLICKED_DELAY,
             viewLifecycleOwner.lifecycleScope,
             false
@@ -84,7 +82,6 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
                     val input = s.toString()
                     savedEditTextValue = input
                     if (input.isEmpty()) {
-                        loadSongsJob?.cancel()
                         viewModel.loadHistory()
                         binding.btnClearEditText.visibility = GONE
                     } else {

@@ -3,6 +3,7 @@ package com.example.playlistmaker.domain.search.model
 import java.io.Serializable
 
 data class Song(
+    val trackId: String,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,
