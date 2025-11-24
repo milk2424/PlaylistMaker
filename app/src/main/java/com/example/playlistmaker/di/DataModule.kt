@@ -2,7 +2,10 @@ package com.example.playlistmaker.di
 
 import androidx.room.Room
 import com.example.playlistmaker.data.db.PlaylistMakerDB
+import com.example.playlistmaker.data.db.dao.PlaylistDao
+import com.example.playlistmaker.data.favourite_songs.utils.PlaylistMapper
 import com.example.playlistmaker.data.favourite_songs.utils.SongEntityMapper
+import com.example.playlistmaker.data.player.mapper.PlaylistSongEntityMapper
 import com.example.playlistmaker.data.search.NetworkClient
 import com.example.playlistmaker.data.search.network.ITunesService
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
@@ -30,6 +33,17 @@ val dataModule = module {
         Room
             .databaseBuilder(androidContext(), PlaylistMakerDB::class.java, "database.db")
             .build()
+    }
+
+    single {
+        PlaylistMapper(get())
+    }
+    single {
+        PlaylistSongEntityMapper()
+    }
+
+    single<PlaylistDao> {
+        get<PlaylistMakerDB>().playlistDao()
     }
 
     factory {

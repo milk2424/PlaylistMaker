@@ -44,4 +44,10 @@
     <color name="library_tab_text_color">@color/white</color>
     <color name="library_tab_bg_color">@color/main_dark</color>
     <color name="error_empty_song_library_text_color">@color/white</color>
+
+    <color name="edit_text_stroke_color">@color/white</color>
+    <color name="day_dark_night_white">@color/white</color>
+    <color name="day_white_night_dark">@color/main_dark</color>
+    <color name="day_light_gray_night_white">@color/white</color>
+    <color name="day_gray_night_white">@color/white</color>
 </resources>

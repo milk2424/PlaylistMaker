@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.interactorModule
 import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.useCaseModule
 import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.domain.settings.interactor.SettingsInteractor
 import org.koin.android.ext.android.inject
@@ -18,7 +19,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(dataModule, interactorModule, repositoryModule, viewModelModule)
+            modules(dataModule, interactorModule, repositoryModule, viewModelModule, useCaseModule)
         }
         settingsInteractor.switchTheme(settingsInteractor.getCurrentTheme())
     }
