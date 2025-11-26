@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.model.Song
-import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerDpToPxMapper
+import com.example.playlistmaker.presentation.mapper.player_mapper.DpToPxMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 
 class SongViewHolder(val songView: View) : RecyclerView.ViewHolder(songView) {
@@ -19,7 +19,7 @@ class SongViewHolder(val songView: View) : RecyclerView.ViewHolder(songView) {
     private var imageRoundedCornersSize: Int = 0
 
     init {
-        imageRoundedCornersSize = PlayerDpToPxMapper.map(
+        imageRoundedCornersSize = DpToPxMapper.map(
             2f, songView.context
         )
     }

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.FragmentFavouriteSongsBinding
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.favourite_songs.FavouriteSongsState
-import com.example.playlistmaker.presentation.view_model.FavouriteSongsViewModel
+import com.example.playlistmaker.presentation.view_model.library.FavouriteSongsViewModel
 import com.example.playlistmaker.ui.FragmentBinding
 import com.example.playlistmaker.ui.song_rc_view.SongAdapter
 import com.example.playlistmaker.ui.library.LibraryFragmentDirections

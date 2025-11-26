@@ -19,6 +19,8 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.search.SongState
 import com.example.playlistmaker.presentation.view_model.SearchViewModel
 import com.example.playlistmaker.ui.FragmentBinding
+import com.example.playlistmaker.ui.library.playlist.adapter.PlaylistAdapter
+import com.example.playlistmaker.ui.player.adapter.PlayerPlaylistAdapter
 import com.example.playlistmaker.ui.song_rc_view.SongAdapter
 import debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel

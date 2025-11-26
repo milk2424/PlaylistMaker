@@ -8,10 +8,13 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import com.example.playlistmaker.ui.player.PlayerFragment
 
 class MainActivity : AppCompatActivity() {
-    private val binding by lazy(mode = LazyThreadSafetyMode.NONE) { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy(mode = LazyThreadSafetyMode.NONE) {
+        ActivityMainBinding.inflate(
+            layoutInflater
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +24,9 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.playerFragment -> binding.bottomNavMenu.visibility = GONE
+                R.id.playerFragment, R.id.newPlaylistFragment -> binding.bottomNavMenu.visibility =
+                    GONE
+
                 else -> binding.bottomNavMenu.visibility = VISIBLE
             }
         }
