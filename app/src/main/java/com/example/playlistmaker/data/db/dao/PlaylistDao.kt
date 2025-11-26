@@ -26,6 +26,12 @@ interface PlaylistDao {
     @Query("SELECT song_id FROM playlist_songs where playlist_id=:id")
     fun getPlaylistSongsIds(id: Int): List<String>
 
+    @Query("SELECT * FROM playlist_songs where playlist_id=:id")
+    fun getPlaylistSongs(id: Int): List<PlaylistSongEntity>
+
+    @Query("SELECT track_time_millis FROM playlist_songs where playlist_id=:id")
+    fun getPlaylistSongsTime(id: Int): List<Long>
+
     @Insert(onConflict = REPLACE)
     fun addSongToPlaylist(song: PlaylistSongEntity)
 }

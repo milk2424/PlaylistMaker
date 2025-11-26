@@ -1,7 +1,7 @@
 package com.example.playlistmaker.domain.favourite_songs.repository
 
 import android.net.Uri
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 
 interface PlaylistsRepository {
 

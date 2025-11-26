@@ -5,12 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.example.playlistmaker.domain.favourite_songs.model.PlaylistState
 import com.example.playlistmaker.domain.favourite_songs.use_cases.LoadPlaylistsUseCase
-import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.player.interactor.PlayerInteractor
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
+import com.example.playlistmaker.presentation.utils.player.BottomSheetUIState
 import com.example.playlistmaker.presentation.utils.player.PlayerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

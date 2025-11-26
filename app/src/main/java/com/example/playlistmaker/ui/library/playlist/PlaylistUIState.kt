@@ -1,6 +1,6 @@
 package com.example.playlistmaker.ui.library.playlist
 
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 
 sealed interface PlaylistUIState {
     data object Loading : PlaylistUIState

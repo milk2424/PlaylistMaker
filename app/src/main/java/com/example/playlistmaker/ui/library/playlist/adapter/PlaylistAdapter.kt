@@ -9,18 +9,22 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.example.playlistmaker.presentation.mapper.player_mapper.DpToPxMapper
 import java.io.File
 
-class PlaylistAdapter() : RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter(private val onItemClicked:(Playlist)->Unit) : RecyclerView.Adapter<PlaylistViewHolder>() {
     var playlists: List<Playlist> = listOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         return PlaylistViewHolder(parent)
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(playlists[position])
+        val playlist = playlists[position]
+        holder.bind(playlist)
+        holder.itemView.setOnClickListener {
+            onItemClicked.invoke(playlist)
+        }
     }
 
     override fun getItemCount(): Int = playlists.size

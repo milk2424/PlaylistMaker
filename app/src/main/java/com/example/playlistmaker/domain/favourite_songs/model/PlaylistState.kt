@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.favourite_songs.model
 
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 
 sealed interface PlaylistState {
     data object Loading: PlaylistState

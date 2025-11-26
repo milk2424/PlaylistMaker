@@ -7,6 +7,7 @@ import com.example.playlistmaker.presentation.view_model.SearchViewModel
 import com.example.playlistmaker.presentation.view_model.SettingsViewModel
 import com.example.playlistmaker.presentation.view_model.library.FavouriteSongsViewModel
 import com.example.playlistmaker.presentation.view_model.library.playlist.NewPlaylistViewModel
+import com.example.playlistmaker.presentation.view_model.library.playlist.PlaylistDataViewModel
 import com.example.playlistmaker.presentation.view_model.library.playlist.PlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -34,6 +35,10 @@ val viewModelModule = module {
 
     viewModel {
         PlaylistViewModel(get())
+    }
+
+    viewModel{
+        PlaylistDataViewModel(get())
     }
 
     factory<MediaPlayer> {

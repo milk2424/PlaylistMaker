@@ -6,7 +6,7 @@ import com.example.playlistmaker.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.data.favourite_songs.utils.PlaylistMapper
 import com.example.playlistmaker.data.image_storage.repository.ImageStorageRepository
 import com.example.playlistmaker.domain.favourite_songs.repository.PlaylistsRepository
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 
 class PlaylistRepositoryImpl(
     private val dao: PlaylistDao,
