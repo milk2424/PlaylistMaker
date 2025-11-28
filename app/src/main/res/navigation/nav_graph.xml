@@ -85,5 +85,9 @@
             android:name="playlist"
             app:argType="com.example.playlistmaker.domain.favourite_songs.model.Playlist"
             />
+        <action
+            android:id="@+id/action_playlistDataFragment_to_playerFragment"
+            app:destination="@id/playerFragment"
+            />
     </fragment>
 </navigation>

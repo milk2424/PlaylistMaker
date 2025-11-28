@@ -44,7 +44,10 @@
     <string name="create">Создать</string>
 
     <string name="dialog_title">Завершить создание плейлиста?</string>
+    <string name="dialog_delete_song_from_playlist_title">Хотите удалить трек?</string>
     <string name="dialog_cancel">Отмена</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
     <string name="dialog_ok">Завершить</string>
     <string name="dialog_message">Все несохраненные данные будут потеряны</string>
 
@@ -53,5 +56,8 @@
 
     <string name="song_is_already_in_playlist">Трек уже добавлен в плейлист %1$s</string>
     <string name="song_added_to_playlist">Добавлено в плейлист %1$s</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 
 </resources>

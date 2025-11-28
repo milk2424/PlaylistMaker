@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.library.playlist
+package com.example.playlistmaker.presentation.utils.playlist
 
 import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 

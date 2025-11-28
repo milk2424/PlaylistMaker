@@ -34,4 +34,7 @@ interface PlaylistDao {
 
     @Insert(onConflict = REPLACE)
     fun addSongToPlaylist(song: PlaylistSongEntity)
+
+    @Query("DELETE  FROM playlist_songs WHERE playlist_id=:playlistId AND song_id=:songId")
+    fun deletePlaylistSong(playlistId: Int, songId: String)
 }

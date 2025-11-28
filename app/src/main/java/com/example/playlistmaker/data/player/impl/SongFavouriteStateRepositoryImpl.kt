@@ -5,6 +5,7 @@ import com.example.playlistmaker.data.favourite_songs.utils.SongEntityMapper
 import com.example.playlistmaker.data.player.mapper.PlaylistSongMapper
 import com.example.playlistmaker.domain.player.repository.SongFavouriteStateRepository
 import com.example.playlistmaker.domain.search.model.Song
+import kotlin.properties.Delegates.vetoable
 
 class SongFavouriteStateRepositoryImpl(
     private val db: PlaylistMakerDB,
