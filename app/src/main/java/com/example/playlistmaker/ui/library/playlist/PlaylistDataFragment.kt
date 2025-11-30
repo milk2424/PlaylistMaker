@@ -21,10 +21,12 @@ import com.example.playlistmaker.ui.FragmentBinding
 import com.example.playlistmaker.ui.library.playlist.adapter.PlaylistSongsAdapter
 import com.example.playlistmaker.ui.utils.GlideImageLoader.loadPlaylistImage
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.concurrent.Volatile
+import org.koin.core.parameter.parametersOf
 
 
 class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
@@ -33,7 +35,7 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
 
     private val playlist by lazy { args.playlist }
 
-    private val viewModel: PlaylistDataViewModel by viewModel()
+    private val viewModel: PlaylistDataViewModel by viewModel { parametersOf(playlist) }
 
     private val playlistDataAdapter = PlaylistSongsAdapter(
         onItemClick = { song -> navigateToPlayer(song) },
@@ -57,6 +59,38 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = playlistDataAdapter
+        }
+
+        val bottomSheetMore = BottomSheetBehavior.from(binding.bottomSheetMore).apply {
+            state = STATE_HIDDEN
+
+            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    binding.overlay.alpha = (slideOffset + 1f) / 2
+                }
+            })
+        }
+
+        binding.btnMore.setOnClickListener {
+            bottomSheetMore.state = STATE_COLLAPSED
+        }
+
+        binding.btnShare.setOnClickListener {
+            viewModel.sharePlaylist(
+                getSongsCountEnding(),
+                requireContext().getString(R.string.playlist_sharing_song_format)
+            )
+        }
+
+        binding.btnMoreShare.setOnClickListener {
+            viewModel.sharePlaylist(
+                getSongsCountEnding(),
+                requireContext().getString(R.string.playlist_sharing_song_format)
+            )
         }
 
         viewModel.loadPlaylistInfo(playlist.id!!)
@@ -120,8 +154,21 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
                         R.plurals.tracks_plurals, songsCount, songsCount
                     )
                 tvPlaylistDescription.text = description
+
+                bsTVPlaylistName.text = tvPlaylistName.text
+                bsTVSongsCount.text = tvPlaylistSongsCount.text
+                loadPlaylistImage(playlist.image, requireContext(), binding.bsImgPlaylist)
             }
         }
+    }
+
+    private fun getSongsCountEnding(): String {
+        val count = viewModel.songs.value.size
+        return requireContext().resources.getQuantityString(
+            R.plurals.tracks_plurals,
+            count,
+            count
+        )
     }
 
     private fun getBottomSheetHeight(): Int {

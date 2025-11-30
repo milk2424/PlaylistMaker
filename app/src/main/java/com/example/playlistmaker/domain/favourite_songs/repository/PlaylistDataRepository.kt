@@ -12,6 +12,6 @@ interface PlaylistDataRepository {
 
     fun deleteSongFromPlaylist(playlistId: Int, songId: String)
 
-    fun loadPlaylistById(playlistId: Int):Flow<Playlist>
+    fun loadPlaylistById(playlistId: Int): Flow<Playlist>
 
 }
