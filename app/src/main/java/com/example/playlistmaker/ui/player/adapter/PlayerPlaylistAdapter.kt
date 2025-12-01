@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.favourite_songs.model.Playlist
-import com.example.playlistmaker.ui.utils.GlideImageLoader.loadPlaylistImage
+import com.example.playlistmaker.ui.utils.GlideImageLoader.loadPlaylistCornerImage
 
 class PlayerPlaylistAdapter(private val onItemClicked: (Playlist) -> Unit) :
     RecyclerView.Adapter<PlayerPlaylistViewHolder>() {
@@ -41,7 +41,7 @@ class PlayerPlaylistViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     private val count = itemView.findViewById<TextView>(R.id.tvSongsCount)
 
     fun bind(item: Playlist) {
-        loadPlaylistImage(item.image, itemView.context, image)
+        loadPlaylistCornerImage(item.image, itemView.context, image)
         name.text = item.name
         count.text = itemView.resources.getQuantityString(
             R.plurals.tracks_plurals,

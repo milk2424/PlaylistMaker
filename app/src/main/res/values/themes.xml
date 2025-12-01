@@ -184,6 +184,27 @@
     </style>
 
 
+    <style name="MyCustomDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorSurface">@color/white</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/CustomMaterialAlertDialogBodyTextStyle</item>
+        <item name="android:textColorPrimary">@color/main_dark</item>
+        <item name="android:textColor">@color/main_dark</item>
+        <item name="android:textColorSecondary">@color/main_dark</item>
+        <item name="buttonBarPositiveButtonStyle">@style/MyDialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/MyDialogButtonStyle</item>
+    </style>
+
+    <style name="MyDialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/main_blue</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="CustomMaterialAlertDialogBodyTextStyle">
+        <item name="android:textColor">@color/main_dark</item>
+    </style>
+
+
+
     <color name="main_screen_bg">@color/white</color>
     <color name="previous_screen_text_color">@color/main_dark</color>
 

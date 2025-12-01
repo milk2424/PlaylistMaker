@@ -14,4 +14,8 @@ interface PlaylistDataRepository {
 
     fun loadPlaylistById(playlistId: Int): Flow<Playlist>
 
+    fun sharePlaylist(message:String)
+
+    fun deletePlaylist(playlistId:Int)
+
 }

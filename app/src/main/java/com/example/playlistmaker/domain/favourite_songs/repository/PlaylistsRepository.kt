@@ -10,4 +10,6 @@ interface PlaylistsRepository {
     fun addNewPlaylist(name: String, description: String, imageUri: Uri?)
 
     fun addSongToPlaylist(playlistId: Int, songId: String)
+
+    fun updatePlaylistInfo(playlistId: Int, name: String, description: String, uri: Uri?)
 }

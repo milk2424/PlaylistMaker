@@ -4,12 +4,14 @@ import com.example.playlistmaker.data.db.dao.PlaylistDao
 import com.example.playlistmaker.data.favourite_songs.utils.PlaylistMapper
 import com.example.playlistmaker.data.player.mapper.PlaylistSongMapper
 import com.example.playlistmaker.domain.favourite_songs.repository.PlaylistDataRepository
+import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import kotlinx.coroutines.flow.flow
 
 class PlaylistDataRepositoryImpl(
     private val dao: PlaylistDao,
     private val songsMapper: PlaylistSongMapper,
-    private val playlistMapper: PlaylistMapper
+    private val playlistMapper: PlaylistMapper,
+    private val externalNavigator: ExternalNavigator
 ) : PlaylistDataRepository {
     override fun loadSongs(playlistId: Int) = flow {
         val songs = dao.getPlaylistSongs(playlistId)
@@ -34,5 +36,14 @@ class PlaylistDataRepositoryImpl(
     override fun loadPlaylistById(playlistId: Int) = flow {
         val playlist = dao.getPlaylistById(playlistId)
         emit(playlistMapper.map(playlist))
+    }
+
+    override fun sharePlaylist(message: String) {
+        externalNavigator.shareMessage(message)
+    }
+
+    override fun deletePlaylist(playlistId: Int) {
+        dao.deletePlaylistSongs(playlistId)
+        dao.deletePlaylist(playlistId)
     }
 }

@@ -72,10 +72,21 @@
         />
     <fragment
         android:id="@+id/newPlaylistFragment"
-        android:name="com.example.playlistmaker.ui.library.playlist.NewPlaylistFragment"
+        android:name="com.example.playlistmaker.ui.library.playlist.create_update_playlist.NewPlaylistFragment"
         android:label="fragment_new_playlist"
         tools:layout="@layout/fragment_new_playlist"
         />
+    <fragment
+        android:id="@+id/updatePlaylistInfoFragment"
+        android:name="com.example.playlistmaker.ui.library.playlist.create_update_playlist.UpdatePlaylistInfoFragment"
+        android:label="fragment_new_playlist"
+        tools:layout="@layout/fragment_new_playlist"
+        >
+        <argument
+            android:name="playlist"
+            app:argType="com.example.playlistmaker.domain.favourite_songs.model.Playlist"
+            />
+    </fragment>
     <fragment
         android:id="@+id/playlistDataFragment"
         android:name="com.example.playlistmaker.ui.library.playlist.PlaylistDataFragment"
@@ -88,6 +99,10 @@
         <action
             android:id="@+id/action_playlistDataFragment_to_playerFragment"
             app:destination="@id/playerFragment"
+            />
+        <action
+            android:id="@+id/action_playlistDataFragment_to_editPlaylistFragment"
+            app:destination="@id/updatePlaylistInfoFragment"
             />
     </fragment>
 </navigation>
