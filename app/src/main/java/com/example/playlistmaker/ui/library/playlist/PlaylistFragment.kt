@@ -12,9 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
+import com.example.playlistmaker.presentation.utils.playlist.PlaylistUIState
 import com.example.playlistmaker.presentation.view_model.library.playlist.PlaylistViewModel
 import com.example.playlistmaker.ui.FragmentBinding
+import com.example.playlistmaker.ui.library.LibraryFragmentDirections
 import com.example.playlistmaker.ui.library.playlist.adapter.PlaylistAdapter
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -24,7 +26,13 @@ class PlaylistFragment : FragmentBinding<FragmentPlaylistBinding>() {
 
     private val viewModel: PlaylistViewModel by viewModel()
 
-    private val playlistAdapter = PlaylistAdapter()
+    private val playlistAdapter = PlaylistAdapter { playlist ->
+        findNavController().navigate(
+            LibraryFragmentDirections.actionLibraryFragmentToPlaylistDataFragment(
+                playlist
+            )
+        )
+    }
 
     override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
         FragmentPlaylistBinding.inflate(layoutInflater, container, false)

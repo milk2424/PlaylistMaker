@@ -14,6 +14,7 @@ data class PlaylistSongEntity(
     val playlistId: Int,
     val trackName: String,
     val artistName: String,
+    @ColumnInfo("track_time_millis")
     val trackTimeMillis: Long,
     val artworkUrl100: String,
     val collectionName: String? = null,

@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.favourite_songs.utils
 
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

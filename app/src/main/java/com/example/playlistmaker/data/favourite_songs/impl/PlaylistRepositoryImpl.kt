@@ -5,8 +5,8 @@ import com.example.playlistmaker.data.db.dao.PlaylistDao
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.data.favourite_songs.utils.PlaylistMapper
 import com.example.playlistmaker.data.image_storage.repository.ImageStorageRepository
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.example.playlistmaker.domain.favourite_songs.repository.PlaylistsRepository
-import com.example.playlistmaker.domain.model.Playlist
 
 class PlaylistRepositoryImpl(
     private val dao: PlaylistDao,
@@ -33,5 +33,12 @@ class PlaylistRepositoryImpl(
         playlistSongs.add(songId)
         playlist.songs = mapper.toSongsIdsString(playlistSongs)
         dao.updatePlaylist(playlist)
+    }
+
+    override fun updatePlaylistInfo(playlistId: Int, name: String, description: String, uri: Uri?) {
+        val playlist = dao.getPlaylistById(playlistId)
+        var imagePath = if (uri != null) imageStorageRepository.saveImage(uri) else playlist.image
+        imagePath = imagePath ?: ""
+        dao.updatePlaylistInfo(playlistId, name, description, imagePath)
     }
 }

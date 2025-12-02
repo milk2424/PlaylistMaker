@@ -1,6 +1,6 @@
-package com.example.playlistmaker.presentation.view_model.player
+package com.example.playlistmaker.presentation.utils.player
 
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 
 sealed interface BottomSheetUIState {
     data object Default : BottomSheetUIState

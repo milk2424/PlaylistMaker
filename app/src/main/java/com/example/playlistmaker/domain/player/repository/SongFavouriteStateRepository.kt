@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.player.repository
 
-import com.example.playlistmaker.domain.model.Playlist
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.example.playlistmaker.domain.search.model.Song
 
 interface SongFavouriteStateRepository {

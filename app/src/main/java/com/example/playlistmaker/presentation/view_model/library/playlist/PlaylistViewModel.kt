@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourite_songs.model.PlaylistState
 import com.example.playlistmaker.domain.favourite_songs.use_cases.LoadPlaylistsUseCase
-import com.example.playlistmaker.ui.library.playlist.PlaylistUIState
+import com.example.playlistmaker.presentation.utils.playlist.PlaylistUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
