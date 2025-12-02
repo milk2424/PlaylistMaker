@@ -179,8 +179,8 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         viewModel.playerStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.currentSongTime.text = state.time
             when (state) {
-                is PlayerState.Playing, is PlayerState.Default -> binding.btnPlay.setImageResource(R.drawable.btn_pause_player)
-                is PlayerState.Paused, is PlayerState.Prepared -> binding.btnPlay.setImageResource(R.drawable.btn_start_player)
+                is PlayerState.Playing -> binding.btnPlay.setImageResource(R.drawable.btn_pause_player)
+                is PlayerState.Paused, is PlayerState.Prepared, is PlayerState.Default -> binding.btnPlay.setImageResource(R.drawable.btn_start_player)
             }
         }
     }

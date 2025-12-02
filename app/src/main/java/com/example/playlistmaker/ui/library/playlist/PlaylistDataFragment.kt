@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.doOnLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -106,31 +108,33 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
 
         viewModel.loadPlaylistInfo(playlist.id!!)
 
-        viewLifecycleOwner.lifecycleScope.apply {
-            launch {
-                viewModel.playlistMainInfo.collect { playlist ->
-                    updatePlaylistInfo(playlist)
-                }
-            }
-
-            launch {
-                viewModel.playlistTime.collect { minutes ->
-                    binding.tvPlaylistTime.text = requireContext().resources.getQuantityString(
-                        R.plurals.minute_plurals, minutes, minutes
-                    )
-                }
-            }
-            launch {
-                viewModel.songs.collect { songs ->
-                    playlistDataAdapter.apply {
-                        this.songs = songs
-                        notifyDataSetChanged()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.playlistMainInfo.collect { playlist ->
+                        updatePlaylistInfo(playlist)
                     }
                 }
-            }
-            launch {
-                viewModel.deletePlaylistState.collect { state ->
-                    if (state) findNavController().popBackStack()
+
+                launch {
+                    viewModel.playlistTime.collect { minutes ->
+                        binding.tvPlaylistTime.text = requireContext().resources.getQuantityString(
+                            R.plurals.minute_plurals, minutes, minutes
+                        )
+                    }
+                }
+                launch {
+                    viewModel.songs.collect { songs ->
+                        playlistDataAdapter.apply {
+                            this.songs = songs
+                            notifyDataSetChanged()
+                        }
+                    }
+                }
+                launch {
+                    viewModel.deletePlaylistState.collect { state ->
+                        if (state) findNavController().popBackStack()
+                    }
                 }
             }
         }
@@ -161,9 +165,7 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
             val snackBar = Snackbar.make(parent, "", Snackbar.LENGTH_SHORT)
 
             val snackbarView = LayoutInflater.from(requireActivity()).inflate(
-                R.layout.snackbar_new_playlist,
-                parent,
-                false
+                R.layout.snackbar_new_playlist, parent, false
             )
             snackbarView.findViewById<TextView>(R.id.tvText).text = message
             val snackbarLayout = snackBar.view as Snackbar.SnackbarLayout
@@ -174,8 +176,7 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
             return
         }
         viewModel.sharePlaylist(
-            getSongsCountEnding(),
-            requireContext().getString(R.string.playlist_sharing_song_format)
+            getSongsCountEnding(), requireContext().getString(R.string.playlist_sharing_song_format)
         )
     }
 
@@ -188,14 +189,15 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
     }
 
     private fun showDialog(message: String, onConfirm: () -> Unit) {
-        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.MyCustomDialogTheme)
-            .setMessage(message)
-            .setNegativeButton(requireContext().getString(R.string.no)) { dialog, which -> dialog.cancel() }
-            .setPositiveButton(requireContext().getString(R.string.yes)) { dialog, which ->
-                onConfirm()
-                dialog.dismiss()
-            }
-            .show()
+        val dialog =
+            MaterialAlertDialogBuilder(requireContext(), R.style.MyCustomDialogTheme).setMessage(
+                    message
+                )
+                .setNegativeButton(requireContext().getString(R.string.no)) { dialog, which -> dialog.cancel() }
+                .setPositiveButton(requireContext().getString(R.string.yes)) { dialog, which ->
+                    onConfirm()
+                    dialog.dismiss()
+                }.show()
     }
 
     private fun updatePlaylistInfo(playlist: Playlist) {
@@ -203,10 +205,9 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
             playlist.apply {
                 loadPlaylistImage(playlist.image, requireContext(), binding.imgPlaylist)
                 tvPlaylistName.text = name
-                tvPlaylistSongsCount.text =
-                    requireContext().resources.getQuantityString(
-                        R.plurals.tracks_plurals, songsCount, songsCount
-                    )
+                tvPlaylistSongsCount.text = requireContext().resources.getQuantityString(
+                    R.plurals.tracks_plurals, songsCount, songsCount
+                )
                 tvPlaylistDescription.text = description
                 bsTVPlaylistName.text = tvPlaylistName.text
                 bsTVSongsCount.text = tvPlaylistSongsCount.text
@@ -218,9 +219,7 @@ class PlaylistDataFragment : FragmentBinding<FragmentPlaylistDataBinding>() {
     private fun getSongsCountEnding(): String {
         val count = viewModel.songs.value.size
         return requireContext().resources.getQuantityString(
-            R.plurals.tracks_plurals,
-            count,
-            count
+            R.plurals.tracks_plurals, count, count
         )
     }
 

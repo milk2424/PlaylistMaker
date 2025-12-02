@@ -9,7 +9,6 @@ import androidx.navigation.fragment.navArgs
 import com.example.playlistmaker.R
 import com.example.playlistmaker.presentation.view_model.library.playlist.NewPlaylistViewModel
 import com.example.playlistmaker.ui.utils.GlideImageLoader.loadPlaylistCornerImage
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -40,12 +39,7 @@ class UpdatePlaylistInfoFragment : BasePlaylistCreator() {
     }
 
     override fun showExitDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(requireContext().getString(R.string.dialog_update_playlist_title))
-            .setMessage(requireContext().getString(R.string.dialog_message))
-            .setNegativeButton(requireContext().getString(R.string.dialog_cancel)) { dialog, which -> dialog.cancel() }
-            .setPositiveButton(requireContext().getString(R.string.dialog_ok)) { dialog, which -> findNavController().popBackStack() }
-            .show()
+        findNavController().popBackStack()
     }
 
     override fun onFinishButtonClicked() {

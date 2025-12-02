@@ -60,6 +60,7 @@ abstract class BasePlaylistCreator : FragmentBinding<FragmentNewPlaylistBinding>
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     canUserGoBack()

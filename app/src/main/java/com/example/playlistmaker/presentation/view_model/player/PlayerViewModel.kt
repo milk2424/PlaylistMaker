@@ -78,7 +78,6 @@ class PlayerViewModel(
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerStateMutableLiveData.postValue(PlayerState.Prepared())
-            startPlayer()
         }
         mediaPlayer.setOnCompletionListener {
             playerStateMutableLiveData.postValue(PlayerState.Prepared())
