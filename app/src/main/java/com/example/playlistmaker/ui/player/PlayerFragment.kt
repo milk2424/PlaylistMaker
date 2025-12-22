@@ -23,7 +23,7 @@ import com.example.playlistmaker.presentation.mapper.player_mapper.DpToPxMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerImageMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 import com.example.playlistmaker.presentation.utils.player.PlayerState
-import com.example.playlistmaker.presentation.view_model.player.BottomSheetUIState
+import com.example.playlistmaker.presentation.utils.player.BottomSheetUIState
 import com.example.playlistmaker.presentation.view_model.player.PlayerViewModel
 import com.example.playlistmaker.ui.FragmentBinding
 import com.example.playlistmaker.ui.player.adapter.PlayerPlaylistAdapter
@@ -34,6 +34,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import kotlin.coroutines.suspendCoroutine
+import kotlin.text.Typography.section
 
 class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     private var currentSong: Song? = null
@@ -177,8 +179,8 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         viewModel.playerStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.currentSongTime.text = state.time
             when (state) {
-                is PlayerState.Playing, is PlayerState.Default -> binding.btnPlay.setImageResource(R.drawable.btn_pause_player)
-                is PlayerState.Paused, is PlayerState.Prepared -> binding.btnPlay.setImageResource(R.drawable.btn_start_player)
+                is PlayerState.Playing -> binding.btnPlay.setImageResource(R.drawable.btn_pause_player)
+                is PlayerState.Paused, is PlayerState.Prepared, is PlayerState.Default -> binding.btnPlay.setImageResource(R.drawable.btn_start_player)
             }
         }
     }

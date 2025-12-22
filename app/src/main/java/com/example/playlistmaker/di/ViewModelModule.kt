@@ -1,13 +1,15 @@
 package com.example.playlistmaker.di
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.example.playlistmaker.domain.search.model.Song
-import com.example.playlistmaker.presentation.view_model.player.PlayerViewModel
 import com.example.playlistmaker.presentation.view_model.SearchViewModel
 import com.example.playlistmaker.presentation.view_model.SettingsViewModel
 import com.example.playlistmaker.presentation.view_model.library.FavouriteSongsViewModel
 import com.example.playlistmaker.presentation.view_model.library.playlist.NewPlaylistViewModel
+import com.example.playlistmaker.presentation.view_model.library.playlist.PlaylistDataViewModel
 import com.example.playlistmaker.presentation.view_model.library.playlist.PlaylistViewModel
+import com.example.playlistmaker.presentation.view_model.player.PlayerViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,12 +30,16 @@ val viewModelModule = module {
         FavouriteSongsViewModel(get())
     }
 
-    viewModel {
-        NewPlaylistViewModel(get())
+    viewModel { (playlist: Playlist?) ->
+        NewPlaylistViewModel(playlist, get(), get())
     }
 
     viewModel {
         PlaylistViewModel(get())
+    }
+
+    viewModel { (playlist: Playlist) ->
+        PlaylistDataViewModel(get(), playlist)
     }
 
     factory<MediaPlayer> {

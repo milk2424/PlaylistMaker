@@ -1,4 +1,6 @@
-package com.example.playlistmaker.domain.model
+package com.example.playlistmaker.domain.favourite_songs.model
+
+import java.io.Serializable
 
 data class Playlist(
     val id: Int?,
@@ -7,5 +9,4 @@ data class Playlist(
     val songs: String,
     val songsCount: Int,
     val image: String?
-)
-
+) : Serializable

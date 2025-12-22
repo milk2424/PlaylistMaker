@@ -5,7 +5,7 @@ import com.example.playlistmaker.data.db.PlaylistMakerDB
 import com.example.playlistmaker.data.db.dao.PlaylistDao
 import com.example.playlistmaker.data.favourite_songs.utils.PlaylistMapper
 import com.example.playlistmaker.data.favourite_songs.utils.SongEntityMapper
-import com.example.playlistmaker.data.player.mapper.PlaylistSongEntityMapper
+import com.example.playlistmaker.data.player.mapper.PlaylistSongMapper
 import com.example.playlistmaker.data.search.NetworkClient
 import com.example.playlistmaker.data.search.network.ITunesService
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
@@ -39,7 +39,7 @@ val dataModule = module {
         PlaylistMapper(get())
     }
     single {
-        PlaylistSongEntityMapper()
+        PlaylistSongMapper()
     }
 
     single<PlaylistDao> {

@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.playerFragment, R.id.newPlaylistFragment -> binding.bottomNavMenu.visibility =
-                    GONE
+                R.id.playerFragment, R.id.newPlaylistFragment, R.id.playlistDataFragment, R.id.updatePlaylistInfoFragment ->
+                    binding.bottomNavMenu.visibility = GONE
 
                 else -> binding.bottomNavMenu.visibility = VISIBLE
             }
