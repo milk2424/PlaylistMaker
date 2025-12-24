@@ -22,8 +22,8 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.mapper.player_mapper.DpToPxMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerImageMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
-import com.example.playlistmaker.presentation.utils.player.PlayerState
 import com.example.playlistmaker.presentation.utils.player.BottomSheetUIState
+import com.example.playlistmaker.presentation.utils.player.PlayerState
 import com.example.playlistmaker.presentation.view_model.player.PlayerViewModel
 import com.example.playlistmaker.ui.FragmentBinding
 import com.example.playlistmaker.ui.player.adapter.PlayerPlaylistAdapter
@@ -34,8 +34,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import kotlin.coroutines.suspendCoroutine
-import kotlin.text.Typography.section
 
 class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     private var currentSong: Song? = null
@@ -98,8 +96,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         }
 
         binding.btnSaveToFavorite.setOnClickListener {
-            if (!debounceSaveToFavouriteButton())
-                viewModel.switchIsSongFavouriteState()
+            if (!debounceSaveToFavouriteButton()) viewModel.switchIsSongFavouriteState()
         }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
@@ -134,8 +131,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
         binding.rvPlaylists.adapter = playlistAdapter
         binding.rvPlaylists.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.VERTICAL, false
+            requireContext(), LinearLayoutManager.VERTICAL, false
         )
 
 
@@ -179,8 +175,9 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         viewModel.playerStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.currentSongTime.text = state.time
             when (state) {
-                is PlayerState.Playing -> binding.btnPlay.setImageResource(R.drawable.btn_pause_player)
-                is PlayerState.Paused, is PlayerState.Prepared, is PlayerState.Default -> binding.btnPlay.setImageResource(R.drawable.btn_start_player)
+                is PlayerState.Playing -> binding.btnPlay.isPlaying = true
+                is PlayerState.Paused, is PlayerState.Prepared, is PlayerState.Default -> binding.btnPlay.isPlaying =
+                    false
             }
         }
     }
@@ -213,8 +210,9 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     @SuppressLint("RestrictedApi")
     private fun showAddMessage(state: Pair<String, Boolean>) {
         val message =
-            if (state.second) requireContext().getString(R.string.song_added_to_playlist) else
-                requireContext().getString(R.string.song_is_already_in_playlist)
+            if (state.second) requireContext().getString(R.string.song_added_to_playlist) else requireContext().getString(
+                R.string.song_is_already_in_playlist
+            )
 
         val messageFormatted = String.format(message, state.first)
 
@@ -223,9 +221,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         val snackBar = Snackbar.make(parent, "", Snackbar.LENGTH_SHORT)
 
         val snackbarView = LayoutInflater.from(requireActivity()).inflate(
-            R.layout.snackbar_new_playlist,
-            parent,
-            false
+            R.layout.snackbar_new_playlist, parent, false
         )
 
         snackbarView.findViewById<TextView>(R.id.tvText).text = messageFormatted
