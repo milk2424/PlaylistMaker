@@ -23,8 +23,10 @@ class PlaybackButtonView @JvmOverloads constructor(
 
     var isPlaying: Boolean = false
         set(value) {
-            field = value
-            invalidate()
+            if (field != value) {
+                field = value
+                invalidate()
+            }
         }
     private var buttonImageBitmap: Bitmap?
     private var imageRect = RectF(0f, 0f, 0f, 0f)
@@ -55,11 +57,6 @@ class PlaybackButtonView @JvmOverloads constructor(
                 recycle()
             }
         }
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
