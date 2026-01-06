@@ -66,4 +66,6 @@
     <string name="delete_playlist" translatable="false">Удалить плейлист</string>
     <string name="playlist_sharing_song_format" translatable="false">%1$s. %2$s - %3$s (%4$s)</string>
     <string name="no_songs_in_playlist" translatable="false">В этом плейлисте нет списка треков, которым можно поделиться</string>
+
+    <string name="network_error_toast" translatable="false">Нет соединения с интернетом</string>
 </resources>

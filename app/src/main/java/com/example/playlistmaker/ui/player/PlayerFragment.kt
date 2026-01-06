@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui.player
 
 import android.annotation.SuppressLint
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,6 +21,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.search.model.Song
+import com.example.playlistmaker.presentation.broadcast_receiver.ConnectionReceiver
 import com.example.playlistmaker.presentation.mapper.player_mapper.DpToPxMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerImageMapper
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
@@ -43,6 +46,8 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(currentSong)
     }
+
+    val connectionReceiver = ConnectionReceiver()
 
     private val mainHandler by lazy(mode = LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
 
@@ -96,7 +101,8 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         }
 
         binding.btnSaveToFavorite.setOnClickListener {
-            if (!debounceSaveToFavouriteButton()) viewModel.switchIsSongFavouriteState()
+            if (!debounceSaveToFavouriteButton())
+                viewModel.switchIsSongFavouriteState()
         }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
@@ -131,7 +137,8 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
         binding.rvPlaylists.adapter = playlistAdapter
         binding.rvPlaylists.layoutManager = LinearLayoutManager(
-            requireContext(), LinearLayoutManager.VERTICAL, false
+            requireContext(),
+            LinearLayoutManager.VERTICAL, false
         )
 
 
@@ -182,6 +189,14 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().registerReceiver(
+            connectionReceiver,
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
+    }
+
     private fun debouncePlayButton(): Boolean {
         val currentIsButtonPlayClicked = isButtonPlayClicked
         if (!currentIsButtonPlayClicked) {
@@ -210,9 +225,8 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     @SuppressLint("RestrictedApi")
     private fun showAddMessage(state: Pair<String, Boolean>) {
         val message =
-            if (state.second) requireContext().getString(R.string.song_added_to_playlist) else requireContext().getString(
-                R.string.song_is_already_in_playlist
-            )
+            if (state.second) requireContext().getString(R.string.song_added_to_playlist) else
+                requireContext().getString(R.string.song_is_already_in_playlist)
 
         val messageFormatted = String.format(message, state.first)
 
@@ -221,7 +235,9 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         val snackBar = Snackbar.make(parent, "", Snackbar.LENGTH_SHORT)
 
         val snackbarView = LayoutInflater.from(requireActivity()).inflate(
-            R.layout.snackbar_new_playlist, parent, false
+            R.layout.snackbar_new_playlist,
+            parent,
+            false
         )
 
         snackbarView.findViewById<TextView>(R.id.tvText).text = messageFormatted
@@ -236,6 +252,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     override fun onPause() {
         super.onPause()
         viewModel.onPause()
+        requireActivity().unregisterReceiver(connectionReceiver)
     }
 
     override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
