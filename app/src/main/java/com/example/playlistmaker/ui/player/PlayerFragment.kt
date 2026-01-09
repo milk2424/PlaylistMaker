@@ -1,10 +1,15 @@
 package com.example.playlistmaker.ui.player
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +17,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -28,6 +34,7 @@ import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMap
 import com.example.playlistmaker.presentation.utils.player.BottomSheetUIState
 import com.example.playlistmaker.presentation.utils.player.PlayerState
 import com.example.playlistmaker.presentation.view_model.player.PlayerViewModel
+import com.example.playlistmaker.services.MusicPlayerService
 import com.example.playlistmaker.ui.FragmentBinding
 import com.example.playlistmaker.ui.player.adapter.PlayerPlaylistAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -55,6 +62,17 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
     private val playlistAdapter = PlayerPlaylistAdapter { playlist ->
         viewModel.addSongToPlaylist(currentSong!!, playlist)
+    }
+
+    private val musicServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicPlayerService.MusicPlayerServiceBinder
+            viewModel.setupMusicPlayer(binder.getMusicPlayerService())
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            viewModel.removeMusicPlayer()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -101,8 +119,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         }
 
         binding.btnSaveToFavorite.setOnClickListener {
-            if (!debounceSaveToFavouriteButton())
-                viewModel.switchIsSongFavouriteState()
+            if (!debounceSaveToFavouriteButton()) viewModel.switchIsSongFavouriteState()
         }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
@@ -137,8 +154,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
         binding.rvPlaylists.adapter = playlistAdapter
         binding.rvPlaylists.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.VERTICAL, false
+            requireContext(), LinearLayoutManager.VERTICAL, false
         )
 
 
@@ -187,14 +203,33 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
                     false
             }
         }
+
+        bindMusicPlayerService()
     }
 
-    override fun onResume() {
-        super.onResume()
-        requireActivity().registerReceiver(
-            connectionReceiver,
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
+    private fun bindMusicPlayerService() {
+        val intent = Intent(requireContext(), MusicPlayerService::class.java).apply {
+            putExtra(SONG_NAME, currentSong?.trackName)
+            putExtra(SONG_ARTIST, currentSong?.artistName)
+        }
+        requireContext().bindService(intent, musicServiceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun unbindMusicPlayerService() {
+        requireContext().unbindService(musicServiceConnection)
+    }
+
+    private fun startMusicPlayerService() {
+        val intent = Intent(requireContext(), MusicPlayerService::class.java).apply {
+            putExtra(SONG_URL, currentSong?.previewUrl)
+            putExtra(SONG_NAME, currentSong?.trackName)
+            putExtra(SONG_ARTIST, currentSong?.artistName)
+        }
+        ContextCompat.startForegroundService(requireContext(),intent)
+    }
+
+    private fun stopMusicPlayerService() {
+
     }
 
     private fun debouncePlayButton(): Boolean {
@@ -225,8 +260,9 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     @SuppressLint("RestrictedApi")
     private fun showAddMessage(state: Pair<String, Boolean>) {
         val message =
-            if (state.second) requireContext().getString(R.string.song_added_to_playlist) else
-                requireContext().getString(R.string.song_is_already_in_playlist)
+            if (state.second) requireContext().getString(R.string.song_added_to_playlist) else requireContext().getString(
+                R.string.song_is_already_in_playlist
+            )
 
         val messageFormatted = String.format(message, state.first)
 
@@ -235,9 +271,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         val snackBar = Snackbar.make(parent, "", Snackbar.LENGTH_SHORT)
 
         val snackbarView = LayoutInflater.from(requireActivity()).inflate(
-            R.layout.snackbar_new_playlist,
-            parent,
-            false
+            R.layout.snackbar_new_playlist, parent, false
         )
 
         snackbarView.findViewById<TextView>(R.id.tvText).text = messageFormatted
@@ -249,10 +283,22 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         snackBar.show()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().registerReceiver(
+            connectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
+    }
+
     override fun onPause() {
         super.onPause()
         viewModel.onPause()
         requireActivity().unregisterReceiver(connectionReceiver)
+    }
+
+    override fun onDestroy() {
+        unbindMusicPlayerService()
+        super.onDestroy()
     }
 
     override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -260,5 +306,8 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
     companion object {
         private const val BUTTONS_DELAY = 200L
+        private const val SONG_URL = "song_url"
+        private const val SONG_NAME = "song_name"
+        private const val SONG_ARTIST = "song_artist"
     }
 }

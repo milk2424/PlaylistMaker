@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.view_model.player
 
-import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +8,7 @@ import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.example.playlistmaker.domain.favourite_songs.model.PlaylistState
 import com.example.playlistmaker.domain.favourite_songs.use_cases.LoadPlaylistsUseCase
 import com.example.playlistmaker.domain.player.interactor.PlayerInteractor
+import com.example.playlistmaker.domain.player.repository.MusicPlayer
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 import com.example.playlistmaker.presentation.utils.player.BottomSheetUIState
@@ -25,17 +25,13 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val currentSong: Song,
-    private val mediaPlayer: MediaPlayer,
     private val interactor: PlayerInteractor,
     private val loadPlaylistsUseCase: LoadPlaylistsUseCase
 ) : ViewModel() {
-    companion object {
-        private const val GET_CURRENT_TIME_DELAY = 300L
-    }
 
     init {
         checkIsSongFavourite(currentSong.trackId)
-        preparePlayer()
+//        preparePlayer()
     }
 
     private val _bottomSheetDataState: MutableStateFlow<BottomSheetUIState> = MutableStateFlow(
@@ -43,8 +39,6 @@ class PlayerViewModel(
     )
 
     val bottomSheetDataState = _bottomSheetDataState.asStateFlow()
-
-    private var observeCurrentTimeJob: Job? = null
 
     private val playerStateMutableLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun playerStateLiveData(): LiveData<PlayerState> = playerStateMutableLiveData
@@ -55,6 +49,7 @@ class PlayerViewModel(
     private val _isSongAddedToPlaylist = MutableSharedFlow<Pair<String, Boolean>>()
     val isSongAddedToPlaylist = _isSongAddedToPlaylist.asSharedFlow()
 
+    private var musicPlayer: MusicPlayer? = null
 
     private fun checkIsSongFavourite(id: String) {
         viewModelScope.launch {
@@ -73,17 +68,6 @@ class PlayerViewModel(
         }
     }
 
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(currentSong.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerStateMutableLiveData.postValue(PlayerState.Prepared())
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerStateMutableLiveData.postValue(PlayerState.Prepared())
-        }
-    }
-
     fun buttonPlayClicked() {
         when (playerStateMutableLiveData.value) {
             is PlayerState.Playing -> pausePlayer()
@@ -92,30 +76,11 @@ class PlayerViewModel(
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
-        playerStateMutableLiveData.value = PlayerState.Playing(getCurrentTimeMapped())
-        observeCurrentTime()
+        musicPlayer?.start()
     }
 
     private fun pausePlayer() {
-        playerStateMutableLiveData.postValue(PlayerState.Paused(getCurrentTimeMapped()))
-        mediaPlayer.pause()
-    }
-
-    private fun getCurrentTimeMapped() = PlayerTimeMapper.map(mediaPlayer.currentPosition)
-
-    private fun observeCurrentTime() {
-        observeCurrentTimeJob?.cancel()
-        observeCurrentTimeJob = viewModelScope.launch {
-            while (mediaPlayer.isPlaying) {
-                delay(GET_CURRENT_TIME_DELAY)
-                if (mediaPlayer.isPlaying) playerStateMutableLiveData.postValue(
-                    PlayerState.Playing(
-                        getCurrentTimeMapped()
-                    )
-                )
-            }
-        }
+        musicPlayer?.pause()
     }
 
     fun onPause() {
@@ -154,8 +119,21 @@ class PlayerViewModel(
         }
     }
 
+    fun setupMusicPlayer(player: MusicPlayer) {
+        musicPlayer = player
+        viewModelScope.launch {
+            musicPlayer?.getPlayerState()?.collect { state ->
+                playerStateMutableLiveData.postValue(state)
+            }
+        }
+    }
+
+    fun removeMusicPlayer() {
+        musicPlayer = null
+    }
+
     override fun onCleared() {
+        musicPlayer = null
         super.onCleared()
-        mediaPlayer.release()
     }
 }
