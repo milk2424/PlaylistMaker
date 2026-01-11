@@ -10,12 +10,9 @@ import com.example.playlistmaker.domain.favourite_songs.use_cases.LoadPlaylistsU
 import com.example.playlistmaker.domain.player.interactor.PlayerInteractor
 import com.example.playlistmaker.domain.player.repository.MusicPlayer
 import com.example.playlistmaker.domain.search.model.Song
-import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 import com.example.playlistmaker.presentation.utils.player.BottomSheetUIState
 import com.example.playlistmaker.presentation.utils.player.PlayerState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +28,6 @@ class PlayerViewModel(
 
     init {
         checkIsSongFavourite(currentSong.trackId)
-//        preparePlayer()
     }
 
     private val _bottomSheetDataState: MutableStateFlow<BottomSheetUIState> = MutableStateFlow(
@@ -136,4 +132,6 @@ class PlayerViewModel(
         musicPlayer = null
         super.onCleared()
     }
+
+    fun needToStartForegroundService() = playerStateMutableLiveData.value is PlayerState.Playing
 }

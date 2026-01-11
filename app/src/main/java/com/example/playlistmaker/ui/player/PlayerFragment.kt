@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -17,6 +19,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -75,8 +78,20 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         }
     }
 
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                startMusicPlayerService()
+            }
+        }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         currentSong = args.song
 
         binding.songName.text = currentSong?.trackName
@@ -209,8 +224,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
     private fun bindMusicPlayerService() {
         val intent = Intent(requireContext(), MusicPlayerService::class.java).apply {
-            putExtra(SONG_NAME, currentSong?.trackName)
-            putExtra(SONG_ARTIST, currentSong?.artistName)
+            putExtra(SONG_URL, currentSong?.previewUrl)
         }
         requireContext().bindService(intent, musicServiceConnection, Context.BIND_AUTO_CREATE)
     }
@@ -225,7 +239,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
             putExtra(SONG_NAME, currentSong?.trackName)
             putExtra(SONG_ARTIST, currentSong?.artistName)
         }
-        ContextCompat.startForegroundService(requireContext(),intent)
+        ContextCompat.startForegroundService(requireContext(), intent)
     }
 
     private fun stopMusicPlayerService() {
@@ -291,10 +305,18 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
     }
 
     override fun onPause() {
-        super.onPause()
         viewModel.onPause()
         requireActivity().unregisterReceiver(connectionReceiver)
+        if (viewModel.needToStartForegroundService()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                startMusicPlayerService()
+            }
+        }
+        super.onPause()
     }
+
 
     override fun onDestroy() {
         unbindMusicPlayerService()

@@ -1,10 +1,17 @@
 package com.example.playlistmaker.services
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
+import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
+import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.player.repository.MusicPlayer
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 import com.example.playlistmaker.presentation.utils.player.PlayerState
@@ -18,11 +25,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MusicPlayerService(private val mediaPlayer: MediaPlayer) : Service(), MusicPlayer {
+class MusicPlayerService() : Service(), MusicPlayer {
+
+    private lateinit var mediaPlayer: MediaPlayer
 
     private val binder = MusicPlayerServiceBinder()
 
-    private var currentSong: MusicPlayerServiceSongData? = null
+    private var currentSongUrl: String? = null
+
+    private var currentSongForegroundData: MusicPlayerServiceSongData? = null
 
     private val _playerStateFlow = MutableStateFlow<PlayerState>(PlayerState.Default())
     val playerStateFlow = _playerStateFlow.asStateFlow()
@@ -32,17 +43,15 @@ class MusicPlayerService(private val mediaPlayer: MediaPlayer) : Service(), Musi
     private var observeCurrentTimeJob: Job? = null
 
     override fun onBind(intent: Intent): IBinder? {
-        currentSong = MusicPlayerServiceSongData(
-            intent.getStringExtra(SONG_URL)!!,
-            intent.getStringExtra(SONG_NAME)!!,
-            intent.getStringExtra(SONG_ARTIST)!!
-        )
+        currentSongUrl = intent.getStringExtra(SONG_URL)!!
+        preparePlayer()
         return binder
     }
 
     override fun onCreate() {
         super.onCreate()
-        preparePlayer()
+        createNotificationChannel()
+        mediaPlayer = MediaPlayer()
     }
 
     override fun onDestroy() {
@@ -50,13 +59,24 @@ class MusicPlayerService(private val mediaPlayer: MediaPlayer) : Service(), Musi
         super.onDestroy()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return START_NOT_STICKY
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        currentSongForegroundData = MusicPlayerServiceSongData(
+            intent.getStringExtra(SONG_URL)!!,
+            intent.getStringExtra(SONG_NAME)!!,
+            intent.getStringExtra(SONG_ARTIST)!!
+        )
+        ServiceCompat.startForeground(
+            this,
+            100,
+            createNotification(),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+        )
+        return START_STICKY
     }
 
     private fun preparePlayer() {
-        if (currentSong?.url?.isEmpty() != false) return
-        mediaPlayer.setDataSource(currentSong?.url)
+        if (currentSongUrl?.isEmpty() != false) return
+        mediaPlayer.setDataSource(currentSongUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             _playerStateFlow.value = PlayerState.Prepared()
@@ -111,11 +131,39 @@ class MusicPlayerService(private val mediaPlayer: MediaPlayer) : Service(), Musi
         }
     }
 
+    private fun createNotificationChannel() {
+
+        val notificationChannel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            NOTIFICATION_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+
+        notificationChannel.description = NOTIFICATION_CHANNEL_NAME
+        val notificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    private fun createNotification() = Notification
+        .Builder(this, NOTIFICATION_CHANNEL_ID)
+        .setContentTitle(NOTIFICATION_TITLE)
+        .setContentText(mapSongForegroundData())
+        .setSmallIcon(R.mipmap.ic_launcher_round)
+        .setCategory(NotificationCompat.CATEGORY_SERVICE)
+        .build()
+
+    private fun mapSongForegroundData() =
+        "${currentSongForegroundData?.songArtist} - ${currentSongForegroundData?.songName}"
+
     companion object {
         private const val SONG_URL = "song_url"
         private const val SONG_NAME = "song_name"
         private const val SONG_ARTIST = "song_artist"
+        private const val NOTIFICATION_CHANNEL_ID = "music_foreground_service"
+        private const val NOTIFICATION_CHANNEL_NAME = "Music service"
         private const val GET_CURRENT_TIME_DELAY = 300L
+        private const val NOTIFICATION_TITLE = "Playlist Maker"
     }
 
 }
