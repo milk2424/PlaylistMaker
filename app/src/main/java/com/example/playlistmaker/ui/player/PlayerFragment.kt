@@ -83,7 +83,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
-            if (isGranted) {
+            if (isGranted && viewModel.needToStartForegroundService()) {
                 startMusicPlayerService()
             }
         }
@@ -219,7 +219,15 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
             }
         }
 
+        checkNotificationPermission()
+
         bindMusicPlayerService()
+    }
+
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     private fun bindMusicPlayerService() {
@@ -240,10 +248,6 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
             putExtra(SONG_ARTIST, currentSong?.artistName)
         }
         ContextCompat.startForegroundService(requireContext(), intent)
-    }
-
-    private fun stopMusicPlayerService() {
-
     }
 
     private fun debouncePlayButton(): Boolean {
@@ -299,27 +303,33 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.removeNotification()
         requireActivity().registerReceiver(
             connectionReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         )
     }
 
     override fun onPause() {
-        viewModel.onPause()
-        requireActivity().unregisterReceiver(connectionReceiver)
-        if (viewModel.needToStartForegroundService()) {
+
+        if (isRemoving) viewModel.removeMusicPlayer()
+        else
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             } else {
                 startMusicPlayerService()
             }
-        }
+        requireActivity().unregisterReceiver(connectionReceiver)
         super.onPause()
     }
 
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         unbindMusicPlayerService()
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        viewModel.removeMusicPlayer()
         super.onDestroy()
     }
 

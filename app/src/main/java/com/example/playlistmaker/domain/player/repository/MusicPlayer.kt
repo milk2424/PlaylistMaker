@@ -10,4 +10,10 @@ interface MusicPlayer {
     fun pause()
 
     fun getPlayerState(): StateFlow<PlayerState>
+
+    fun showNotification()
+
+    fun removeNotification()
+
+    fun stop()
 }

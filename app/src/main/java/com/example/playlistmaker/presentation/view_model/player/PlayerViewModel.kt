@@ -79,10 +79,6 @@ class PlayerViewModel(
         musicPlayer?.pause()
     }
 
-    fun onPause() {
-        pausePlayer()
-    }
-
     fun loadPlaylists() {
         if (_bottomSheetDataState.value is BottomSheetUIState.Default)
             viewModelScope.launch(Dispatchers.IO) {
@@ -125,13 +121,19 @@ class PlayerViewModel(
     }
 
     fun removeMusicPlayer() {
+        musicPlayer?.stop()
         musicPlayer = null
     }
 
     override fun onCleared() {
+        musicPlayer?.stop()
         musicPlayer = null
         super.onCleared()
     }
 
     fun needToStartForegroundService() = playerStateMutableLiveData.value is PlayerState.Playing
+
+    fun removeNotification() {
+        musicPlayer?.removeNotification()
+    }
 }

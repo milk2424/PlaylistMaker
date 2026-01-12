@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 
 class MusicPlayerService() : Service(), MusicPlayer {
 
-    private lateinit var mediaPlayer: MediaPlayer
+    private var mediaPlayer: MediaPlayer? = null
 
     private val binder = MusicPlayerServiceBinder()
 
@@ -42,21 +42,16 @@ class MusicPlayerService() : Service(), MusicPlayer {
 
     private var observeCurrentTimeJob: Job? = null
 
-    override fun onBind(intent: Intent): IBinder? {
-        currentSongUrl = intent.getStringExtra(SONG_URL)!!
-        preparePlayer()
-        return binder
-    }
-
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
         mediaPlayer = MediaPlayer()
     }
 
-    override fun onDestroy() {
-        releasePlayer()
-        super.onDestroy()
+    override fun onBind(intent: Intent): IBinder? {
+        currentSongUrl = intent.getStringExtra(SONG_URL)!!
+        preparePlayer()
+        return binder
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -65,38 +60,53 @@ class MusicPlayerService() : Service(), MusicPlayer {
             intent.getStringExtra(SONG_NAME)!!,
             intent.getStringExtra(SONG_ARTIST)!!
         )
+        showNotification()
+        return START_STICKY
+    }
+
+    override fun onDestroy() {
+        releasePlayer()
+        super.onDestroy()
+    }
+
+    override fun showNotification() {
         ServiceCompat.startForeground(
             this,
             100,
             createNotification(),
             ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
         )
-        return START_STICKY
+    }
+
+    override fun removeNotification() {
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
     }
 
     private fun preparePlayer() {
         if (currentSongUrl?.isEmpty() != false) return
-        mediaPlayer.setDataSource(currentSongUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
+        mediaPlayer?.setDataSource(currentSongUrl)
+        mediaPlayer?.prepareAsync()
+        mediaPlayer?.setOnPreparedListener {
             _playerStateFlow.value = PlayerState.Prepared()
         }
-        mediaPlayer.setOnCompletionListener {
+        mediaPlayer?.setOnCompletionListener {
+            removeNotification()
             _playerStateFlow.value = PlayerState.Prepared()
         }
     }
 
     private fun releasePlayer() {
         currentTimeScope.cancel()
-        mediaPlayer.stop()
+        mediaPlayer?.stop()
         _playerStateFlow.value = PlayerState.Default()
-        mediaPlayer.setOnPreparedListener(null)
-        mediaPlayer.setOnCompletionListener(null)
-        mediaPlayer.release()
+        mediaPlayer?.setOnPreparedListener(null)
+        mediaPlayer?.setOnCompletionListener(null)
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     override fun start() {
-        mediaPlayer.start()
+        mediaPlayer?.start()
         _playerStateFlow.value = PlayerState.Playing(getCurrentTimeMapped())
         observeCurrentTime()
     }
@@ -104,22 +114,26 @@ class MusicPlayerService() : Service(), MusicPlayer {
     override fun pause() {
         _playerStateFlow.value = PlayerState.Paused(getCurrentTimeMapped())
         observeCurrentTimeJob?.cancel()
-        mediaPlayer.pause()
+        mediaPlayer?.pause()
     }
 
+    override fun stop() {
+        releasePlayer()
+        stopSelf()
+    }
 
     override fun getPlayerState(): StateFlow<PlayerState> {
         return playerStateFlow
     }
 
-    private fun getCurrentTimeMapped() = PlayerTimeMapper.map(mediaPlayer.currentPosition)
+    private fun getCurrentTimeMapped() = PlayerTimeMapper.map(mediaPlayer!!.currentPosition)
 
     private fun observeCurrentTime() {
         observeCurrentTimeJob?.cancel()
         observeCurrentTimeJob = currentTimeScope.launch {
-            while (mediaPlayer.isPlaying) {
+            while (mediaPlayer!!.isPlaying) {
                 delay(GET_CURRENT_TIME_DELAY)
-                if (mediaPlayer.isPlaying) _playerStateFlow.value =
+                if (mediaPlayer?.isPlaying ?: false) _playerStateFlow.value =
                     PlayerState.Playing(getCurrentTimeMapped())
             }
         }
@@ -149,7 +163,7 @@ class MusicPlayerService() : Service(), MusicPlayer {
         .Builder(this, NOTIFICATION_CHANNEL_ID)
         .setContentTitle(NOTIFICATION_TITLE)
         .setContentText(mapSongForegroundData())
-        .setSmallIcon(R.mipmap.ic_launcher_round)
+        .setSmallIcon(R.mipmap.ic_launcher)
         .setCategory(NotificationCompat.CATEGORY_SERVICE)
         .build()
 
