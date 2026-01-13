@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui.search
 
 import android.content.Context
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,11 +18,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.model.Song
+import com.example.playlistmaker.presentation.broadcast_receiver.ConnectionReceiver
 import com.example.playlistmaker.presentation.utils.search.SongState
 import com.example.playlistmaker.presentation.view_model.SearchViewModel
 import com.example.playlistmaker.ui.FragmentBinding
-import com.example.playlistmaker.ui.library.playlist.adapter.PlaylistAdapter
-import com.example.playlistmaker.ui.player.adapter.PlayerPlaylistAdapter
 import com.example.playlistmaker.ui.song_rc_view.SongAdapter
 import debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,6 +35,8 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
     private var songAdapter = SongAdapter()
 
     private lateinit var onItemClick: (Song) -> Unit
+
+    val connectionReceiver = ConnectionReceiver()
 
     override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
         FragmentSearchBinding.inflate(layoutInflater, container, false)
@@ -123,6 +126,19 @@ class SearchFragment : FragmentBinding<FragmentSearchBinding>() {
         viewModel.songStateLiveData().observe(viewLifecycleOwner) { songState ->
             setUIAfterSongResponse(songState)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().registerReceiver(
+            connectionReceiver,
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
+    }
+
+    override fun onPause() {
+        requireActivity().unregisterReceiver(connectionReceiver)
+        super.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
