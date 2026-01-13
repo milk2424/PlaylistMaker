@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
@@ -219,16 +220,23 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
             }
         }
 
-        checkNotificationPermission()
+        launchNotificationPermission()
 
         bindMusicPlayerService()
     }
 
-    private fun checkNotificationPermission() {
+    private fun launchNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
+
+    private fun checkNotificationPermission() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED else true
 
     private fun bindMusicPlayerService() {
         val intent = Intent(requireContext(), MusicPlayerService::class.java).apply {
@@ -313,11 +321,7 @@ class PlayerFragment : FragmentBinding<FragmentPlayerBinding>() {
 
         if (isRemoving) viewModel.removeMusicPlayer()
         else
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            } else {
-                startMusicPlayerService()
-            }
+            if (checkNotificationPermission()) startMusicPlayerService()
         requireActivity().unregisterReceiver(connectionReceiver)
         super.onPause()
     }

@@ -131,7 +131,7 @@ class MusicPlayerService() : Service(), MusicPlayer {
     private fun observeCurrentTime() {
         observeCurrentTimeJob?.cancel()
         observeCurrentTimeJob = currentTimeScope.launch {
-            while (mediaPlayer!!.isPlaying) {
+            while (mediaPlayer?.isPlaying == true) {
                 delay(GET_CURRENT_TIME_DELAY)
                 if (mediaPlayer?.isPlaying ?: false) _playerStateFlow.value =
                     PlayerState.Playing(getCurrentTimeMapped())
