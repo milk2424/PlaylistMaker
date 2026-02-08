@@ -16,9 +16,21 @@ import com.example.playlistmaker.presentation.utils.search.SongState.Successful
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel() {
+
+
+    private val _inputText: MutableStateFlow<String> = MutableStateFlow("")
+
+    val inputText = _inputText.asStateFlow()
+
+    fun updateInputText(text: String) {
+        _inputText.value = text
+    }
+
     private val songStateMutableLiveData = MutableLiveData<SongState>()
 
     private var loadSongsJob: Job? = null
