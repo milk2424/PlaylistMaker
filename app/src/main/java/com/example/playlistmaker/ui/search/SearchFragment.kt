@@ -7,7 +7,12 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.ui.theme.ColorTheme
+import debounce
+import org.koin.androidx.compose.koinViewModel
 
 class SearchFragment : Fragment()/*FragmentBinding<FragmentSearchBinding>()*/ {
 
@@ -21,9 +26,28 @@ class SearchFragment : Fragment()/*FragmentBinding<FragmentSearchBinding>()*/ {
 
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 
+//            val onItemClick: (Song) -> Unit = debounce(
+//                TRACK_ITEM_CLICKED_DELAY,
+//                viewLifecycleOwner.lifecycleScope,
+//                false
+//            ) { song ->
+//                viewModel.addSongToHistory(song)
+//                findNavController().navigate(
+//                    SearchFragmentDirections.actionSearchFragmentToPlayerFragment(
+//                        song
+//                    )
+//                )
+//            }
+
             setContent {
                 ColorTheme {
-                    SearchFragmentCompose()
+                    SearchFragmentCompose() { song->
+                        findNavController().navigate(
+                            SearchFragmentDirections.actionSearchFragmentToPlayerFragment(
+                                song
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -77,12 +101,12 @@ class SearchFragment : Fragment()/*FragmentBinding<FragmentSearchBinding>()*/ {
 //    }
 //
 
-//
-//    companion object {
-//        private const val SEARCH_EDIT_TEXT_TRACK_DELAY = 2000L
-//        private const val SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY = 0L
-//        private const val TRACK_ITEM_CLICKED_DELAY = 500L
-//        const val EDIT_TEXT_VALUE_KEY = "EDIT_TEXT_VALUE_KEY"
-//    }
+    //
+    companion object {
+        private const val SEARCH_EDIT_TEXT_TRACK_DELAY = 2000L
+        private const val SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY = 0L
+        private const val TRACK_ITEM_CLICKED_DELAY = 500L
+        const val EDIT_TEXT_VALUE_KEY = "EDIT_TEXT_VALUE_KEY"
+    }
 
 }

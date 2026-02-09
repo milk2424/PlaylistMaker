@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.view_model.library.playlist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourite_songs.model.PlaylistState

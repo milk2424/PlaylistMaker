@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.search.song_preview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,12 +18,15 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.model.Song
 
 @Composable
-fun SongItem(song: Song) {
+fun SongItem(song: Song, onItemClick: (Song) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
-            .background(Color.Transparent),
+            .background(Color.Transparent)
+            .clickable {
+                onItemClick.invoke(song)
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         SongImage(song.artworkUrl100)

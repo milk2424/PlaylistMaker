@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search.song_history
+package com.example.playlistmaker.ui.core
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,12 +8,12 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.ui.search.song_preview.SongItem
 
 @Composable
-fun SongsList(modifier: Modifier, songs: List<Song>) {
+fun SongsList(modifier: Modifier, songs: List<Song>, onItemClick:(Song)-> Unit) {
     LazyColumn(
         modifier = modifier,
     ) {
         items(songs) { song ->
-            SongItem(song)
+            SongItem(song, onItemClick)
         }
     }
 }

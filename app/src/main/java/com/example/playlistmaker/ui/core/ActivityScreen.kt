@@ -25,7 +25,7 @@ fun ActivityScreen() {
                 .background(MaterialTheme.colorScheme.background)
         ) { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
-                SearchFragmentCompose()
+               // SearchFragmentCompose()
             }
         }
     }
