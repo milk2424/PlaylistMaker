@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.compose
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,12 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,19 +42,31 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.model.Song
+import com.example.playlistmaker.presentation.utils.player.BottomSheetUIState
 import com.example.playlistmaker.presentation.view_model.player.PlayerViewModel
 import com.example.playlistmaker.ui.core.ScreenName
+import com.example.playlistmaker.ui.player.compose.bottom_sheet.AddSongToPlaylistBottomSheet
 import com.example.playlistmaker.ui.player.compose.button.ActionButton
 import com.example.playlistmaker.ui.player.compose.button.PlaybackButton
 import com.example.playlistmaker.ui.player.compose.text.PlayerMainText
 import com.example.playlistmaker.ui.player.compose.text.PlayerSecondaryData
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerScreen(
     viewModel: PlayerViewModel,
     song: Song,
-    buttonBackClicked: () -> Unit
+    buttonBackClicked: () -> Unit,
+    newPlaylistClicked: () -> Unit
 ) {
+
+    var isBackNavigation by remember { mutableStateOf(false) }
+
+    BackHandler {
+        isBackNavigation = true
+        buttonBackClicked()
+    }
 
     val scrollState = rememberScrollState()
 
@@ -57,11 +76,20 @@ fun PlayerScreen(
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    val playlists by viewModel.bottomSheetDataState.collectAsStateWithLifecycle()
+
+    val scope = rememberCoroutineScope()
+
+    val bottomSheetState = rememberModalBottomSheetState()
+
+    var isBottomSheetVisible by remember { mutableStateOf(false) }
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_STOP -> {
-                    viewModel.startMusicPlayerService()
+                    if (!isBackNavigation)
+                        viewModel.startMusicPlayerService()
                 }
 
                 Lifecycle.Event.ON_START -> {
@@ -87,6 +115,7 @@ fun PlayerScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         ScreenName("", true, Modifier.clickable {
+            isBackNavigation = true
             buttonBackClicked()
         })
         AsyncImage(
@@ -115,7 +144,11 @@ fun PlayerScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ActionButton(R.drawable.btn_add_to_library) {}
+            ActionButton(R.drawable.btn_add_to_library) {
+                isBottomSheetVisible = true
+                viewModel.loadPlaylists()
+                scope.launch { bottomSheetState.partialExpand() }
+            }
             PlaybackButton(playerState!!) {
                 viewModel.buttonPlayClicked()
             }
@@ -134,4 +167,32 @@ fun PlayerScreen(
 
         PlayerSecondaryData(song)
     }
+    when (playlists) {
+        is BottomSheetUIState.Data ->
+            AddSongToPlaylistBottomSheet(
+                isBottomSheetVisible,
+                (playlists as BottomSheetUIState.Data).playlists,
+                bottomSheetState,
+                song,
+                { song, playlist ->
+                    viewModel.addSongToPlaylist(song, playlist)
+                },
+                onDismiss = {
+                    isBottomSheetVisible = false
+                },
+                hideBottomSheet = {
+                    scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
+                        if (!bottomSheetState.isVisible) {
+                            isBottomSheetVisible = false
+                        }
+                    }
+
+                }
+            ) {
+                newPlaylistClicked()
+            }
+
+        BottomSheetUIState.Default -> {}
+    }
+
 }

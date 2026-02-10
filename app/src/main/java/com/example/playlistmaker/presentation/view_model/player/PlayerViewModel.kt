@@ -115,17 +115,16 @@ class PlayerViewModel(
     }
 
     fun loadPlaylists() {
-        if (_bottomSheetDataState.value is BottomSheetUIState.Default)
-            viewModelScope.launch(Dispatchers.IO) {
-                loadPlaylistsUseCase().collect { state ->
-                    when (state) {
-                        is PlaylistState.Empty -> BottomSheetUIState.Data(emptyList())
-                        is PlaylistState.Loading -> {}
-                        is PlaylistState.Success ->
-                            _bottomSheetDataState.value = BottomSheetUIState.Data(state.data)
-                    }
+        viewModelScope.launch(Dispatchers.IO) {
+            loadPlaylistsUseCase().collect { state ->
+                when (state) {
+                    is PlaylistState.Empty -> BottomSheetUIState.Data(emptyList())
+                    is PlaylistState.Loading -> {}
+                    is PlaylistState.Success ->
+                        _bottomSheetDataState.value = BottomSheetUIState.Data(state.data)
                 }
             }
+        }
     }
 
     fun resetPlaylistsData() {
@@ -143,6 +142,7 @@ class PlayerViewModel(
             } else {
                 _isSongAddedToPlaylist.emit(Pair(playlist.name, false))
             }
+            loadPlaylists()
         }
     }
 
@@ -161,9 +161,9 @@ class PlayerViewModel(
     }
 
     override fun onCleared() {
+        removeNotification()
         application.unbindService(musicServiceConnection)
-        musicPlayer?.stop()
-        musicPlayer = null
+        removeMusicPlayer()
         super.onCleared()
     }
 

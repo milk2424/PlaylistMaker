@@ -347,8 +347,8 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_bottom_sheet"
         android:clickable="true"
-        android:visibility="gone"
         android:orientation="vertical"
+        android:visibility="visible"
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         >
