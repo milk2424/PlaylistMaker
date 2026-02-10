@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.playlistmaker.R
 
 @Composable
-fun ScreenName(text: String, isButtonBackVisible: Boolean) {
+fun ScreenName(text: String, isButtonBackVisible: Boolean, modifier: Modifier = Modifier) {
     Row(
         modifier = Modifier.padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -27,7 +27,7 @@ fun ScreenName(text: String, isButtonBackVisible: Boolean) {
         if (isButtonBackVisible) Image(
             painter = painterResource(R.drawable.btn_arrow_back),
             contentDescription = stringResource(R.string.btn_back),
-            modifier = Modifier.padding(start = 16.dp),
+            modifier = modifier.padding(start = 16.dp),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
         )
         Text(

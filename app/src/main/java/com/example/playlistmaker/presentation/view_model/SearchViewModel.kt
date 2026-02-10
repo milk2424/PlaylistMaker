@@ -58,7 +58,7 @@ class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel(
 
     fun clearHistory() {
         songsInteractor.clearSongHistory()
-        songsInteractor.loadSongHistory()
+        loadHistory()
     }
 
     fun addSongToHistory(song: Song) = songsInteractor.addSongToHistory(song)

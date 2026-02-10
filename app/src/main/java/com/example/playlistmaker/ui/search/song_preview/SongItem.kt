@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.model.Song
+import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 
 @Composable
 fun SongItem(song: Song, onItemClick: (Song) -> Unit) {
@@ -33,7 +34,7 @@ fun SongItem(song: Song, onItemClick: (Song) -> Unit) {
         SongData(
             song.trackName,
             song.artistName,
-            "2:22",
+            PlayerTimeMapper.map(song.trackTimeMillis),
             modifier = Modifier.weight(1f)
         )
         Image(

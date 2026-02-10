@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.ui.core.ScreenName
 import com.example.playlistmaker.ui.library.compose.pager.TabName
@@ -26,7 +27,7 @@ import com.example.playlistmaker.ui.library.compose.pager.screens.favourite_song
 import com.example.playlistmaker.ui.library.compose.pager.screens.playlists.PlaylistsScreen
 
 @Composable
-fun LibraryFragmentCompose(onSongClicked: (Song) -> Unit) {
+fun LibraryFragmentCompose(onSongClicked: (Song) -> Unit, onPlaylistClicked:(Playlist)->Unit) {
 
     val pagerState = rememberPagerState(pageCount = { 2 })
 
@@ -80,7 +81,7 @@ fun LibraryFragmentCompose(onSongClicked: (Song) -> Unit) {
         ) { page ->
             when (page) {
                 0 -> FavouriteSongsScreen(onSongClicked = onSongClicked)
-                1 -> PlaylistsScreen()
+                1 -> PlaylistsScreen(onPlaylistClicked = onPlaylistClicked)
             }
         }
 

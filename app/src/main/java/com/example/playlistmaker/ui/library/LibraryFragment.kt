@@ -23,39 +23,24 @@ class LibraryFragment : Fragment() {
 
             setContent {
                 ColorTheme {
-                    LibraryFragmentCompose() { song ->
-                        findNavController().navigate(
-                            LibraryFragmentDirections.actionLibraryFragmentToPlayerFragment(
-                                song
+                    LibraryFragmentCompose(
+                        onSongClicked = { song ->
+                            findNavController().navigate(
+                                LibraryFragmentDirections.actionLibraryFragmentToPlayerFragment(
+                                    song
+                                )
                             )
-                        )
-                    }
+                        },
+                        onPlaylistClicked = { playlist ->
+                            findNavController().navigate(
+                                LibraryFragmentDirections.actionLibraryFragmentToPlaylistDataFragment(
+                                    playlist
+                                )
+                            )
+                        }
+                    )
                 }
             }
         }
     }
-
-//    override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
-//        FragmentLibraryBinding.inflate(layoutInflater, container, false)
-//
-//    private lateinit var tabLayoutMediator: TabLayoutMediator
-//
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        binding.viewPager.adapter = LibraryViewPagerAdapter(childFragmentManager, lifecycle)
-//        tabLayoutMediator =
-//            TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-//                when (position) {
-//                    0 -> tab.text = getString(R.string.favourite_songs)
-//                    1 -> tab.text = getString(R.string.playlists)
-//                }
-//            }
-//        tabLayoutMediator.attach()
-//    }
-//
-//    override fun onDestroyView() {
-//        binding.viewPager.adapter = null
-//        tabLayoutMediator.detach()
-//        super.onDestroyView()
-//    }
 }

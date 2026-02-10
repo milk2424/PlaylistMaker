@@ -4,45 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.playlistmaker.databinding.FragmentSettingsBinding
-import com.example.playlistmaker.presentation.view_model.SettingsViewModel
-import com.example.playlistmaker.ui.FragmentBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.Fragment
+import com.example.playlistmaker.ui.settings.compose.SettingsScreen
+import com.example.playlistmaker.ui.theme.ColorTheme
 
-class SettingsFragment : FragmentBinding<FragmentSettingsBinding>() {
-
-
-    private val viewModel: SettingsViewModel by viewModel()
-
-
-    override fun createBinding(layoutInflater: LayoutInflater, container: ViewGroup?) =
-        FragmentSettingsBinding.inflate(layoutInflater, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setListeners()
-    }
-
-    private fun setListeners() {
-
-        binding.btnShareApp.setOnClickListener {
-            viewModel.shareApp()
-        }
-        binding.btnWriteToSupport.setOnClickListener {
-            viewModel.openSupport()
-        }
-        binding.btnUserAgreement.setOnClickListener {
-            viewModel.openTerms()
-        }
-
-        viewModel.isNightLiveData().observe(viewLifecycleOwner) { themeSettings ->
-            binding.themeSwitch.isChecked = themeSettings.isNight
-        }
-
-        binding.themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.switchTheme(isChecked)
+class SettingsFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                ColorTheme {
+                    SettingsScreen()
+                }
+            }
         }
     }
-
-
 }

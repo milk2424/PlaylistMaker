@@ -24,8 +24,8 @@ import coil.compose.AsyncImage
 import com.example.playlistmaker.R
 
 @Composable
-fun PlaylistItem(imagePath: String?, name: String, count: Int) {
-    Column(modifier = Modifier.width(160.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+fun PlaylistItem(imagePath: String?, name: String, count: Int, modifier: Modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         AsyncImage(
             model = if (imagePath.isNullOrEmpty()) R.drawable.no_track_art else imagePath,
             modifier = Modifier

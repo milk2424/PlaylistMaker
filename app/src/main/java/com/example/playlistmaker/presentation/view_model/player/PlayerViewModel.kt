@@ -1,5 +1,12 @@
 package com.example.playlistmaker.presentation.view_model.player
 
+import android.app.Application
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +19,7 @@ import com.example.playlistmaker.domain.player.repository.MusicPlayer
 import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.utils.player.BottomSheetUIState
 import com.example.playlistmaker.presentation.utils.player.PlayerState
+import com.example.playlistmaker.services.MusicPlayerService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,12 +31,9 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val currentSong: Song,
     private val interactor: PlayerInteractor,
-    private val loadPlaylistsUseCase: LoadPlaylistsUseCase
+    private val loadPlaylistsUseCase: LoadPlaylistsUseCase,
+    private val application: Application,
 ) : ViewModel() {
-
-    init {
-        checkIsSongFavourite(currentSong.trackId)
-    }
 
     private val _bottomSheetDataState: MutableStateFlow<BottomSheetUIState> = MutableStateFlow(
         BottomSheetUIState.Default
@@ -63,6 +68,36 @@ class PlayerViewModel(
             _isSongFavouriteState.emit(!currentState)
         }
     }
+
+    private val musicServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicPlayerService.MusicPlayerServiceBinder
+            setupMusicPlayer(binder.getMusicPlayerService())
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            removeMusicPlayer()
+        }
+    }
+
+
+    private fun bindMusicPlayerService() {
+        val intent = Intent(application, MusicPlayerService::class.java).apply {
+            putExtra(SONG_URL, currentSong.previewUrl)
+        }
+        application.bindService(intent, musicServiceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    fun startMusicPlayerService() {
+        val intent = Intent(application, MusicPlayerService::class.java).apply {
+            putExtra(SONG_URL, currentSong.previewUrl)
+            putExtra(SONG_NAME, currentSong.trackName)
+            putExtra(SONG_ARTIST, currentSong.artistName)
+        }
+
+        ContextCompat.startForegroundService(application, intent)
+    }
+
 
     fun buttonPlayClicked() {
         when (playerStateMutableLiveData.value) {
@@ -120,20 +155,32 @@ class PlayerViewModel(
         }
     }
 
-    fun removeMusicPlayer() {
+    private fun removeMusicPlayer() {
         musicPlayer?.stop()
         musicPlayer = null
     }
 
     override fun onCleared() {
+        application.unbindService(musicServiceConnection)
         musicPlayer?.stop()
         musicPlayer = null
         super.onCleared()
     }
 
-    fun needToStartForegroundService() = playerStateMutableLiveData.value is PlayerState.Playing
-
     fun removeNotification() {
         musicPlayer?.removeNotification()
+    }
+
+
+    init {
+        checkIsSongFavourite(currentSong.trackId)
+        bindMusicPlayerService()
+    }
+
+    companion object {
+        private const val BUTTONS_DELAY = 200L
+        private const val SONG_URL = "song_url"
+        private const val SONG_NAME = "song_name"
+        private const val SONG_ARTIST = "song_artist"
     }
 }

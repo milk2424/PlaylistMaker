@@ -10,12 +10,14 @@ import com.example.playlistmaker.presentation.view_model.library.playlist.NewPla
 import com.example.playlistmaker.presentation.view_model.library.playlist.PlaylistDataViewModel
 import com.example.playlistmaker.presentation.view_model.library.playlist.PlaylistViewModel
 import com.example.playlistmaker.presentation.view_model.player.PlayerViewModel
+import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { (song: Song) ->
-        PlayerViewModel(song, get(), get())
+        PlayerViewModel(song, get(), get(),androidApplication())
     }
 
     viewModel {

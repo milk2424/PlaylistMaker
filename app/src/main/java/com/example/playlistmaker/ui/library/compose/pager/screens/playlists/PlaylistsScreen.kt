@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 import com.example.playlistmaker.presentation.utils.playlist.PlaylistUIState
 import com.example.playlistmaker.presentation.view_model.library.playlist.PlaylistViewModel
 import com.example.playlistmaker.ui.core.MainButton
@@ -20,7 +21,7 @@ import com.example.playlistmaker.ui.library.compose.pager.Error
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PlaylistsScreen(viewModel: PlaylistViewModel = koinViewModel()) {
+fun PlaylistsScreen(viewModel: PlaylistViewModel = koinViewModel(),onPlaylistClicked:(Playlist)->Unit) {
     val screenState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -41,7 +42,7 @@ fun PlaylistsScreen(viewModel: PlaylistViewModel = koinViewModel()) {
             is PlaylistUIState.Empty -> Error(stringResource(R.string.you_dont_create_any_playlists))
             is PlaylistUIState.Loading -> ProgressIndicator()
             is PlaylistUIState.Success -> {
-                PlaylistsGrid((screenState as PlaylistUIState.Success).data)
+                PlaylistsGrid((screenState as PlaylistUIState.Success).data,onPlaylistClicked)
             }
 
         }

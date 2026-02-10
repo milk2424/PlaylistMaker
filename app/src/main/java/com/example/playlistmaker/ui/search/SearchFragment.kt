@@ -101,7 +101,6 @@ class SearchFragment : Fragment()/*FragmentBinding<FragmentSearchBinding>()*/ {
 //    }
 //
 
-    //
     companion object {
         private const val SEARCH_EDIT_TEXT_TRACK_DELAY = 2000L
         private const val SEARCH_BUTTON_ENTER_PRESSED_TRACK_DELAY = 0L
