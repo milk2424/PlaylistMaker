@@ -59,18 +59,6 @@
 
     </fragment>
     <fragment
-        android:id="@+id/playlistFragment"
-        android:name="com.example.playlistmaker.ui.library.playlist.PlaylistFragment"
-        android:label="fragment_playlist"
-        tools:layout="@layout/fragment_playlist"
-        />
-    <fragment
-        android:id="@+id/favouriteSongsFragment"
-        android:name="com.example.playlistmaker.ui.library.favourite_songs.FavouriteSongsFragment"
-        android:label="fragment_favourite_songs"
-        tools:layout="@layout/fragment_favourite_songs"
-        />
-    <fragment
         android:id="@+id/newPlaylistFragment"
         android:name="com.example.playlistmaker.ui.library.playlist.create_update_playlist.NewPlaylistFragment"
         android:label="fragment_new_playlist"

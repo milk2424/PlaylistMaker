@@ -16,7 +16,6 @@ class FavouriteSongsViewModel(private val repository: FavouriteSongsRepository) 
 
     fun observeFavouriteSongsState(): LiveData<FavouriteSongsState> = _favouriteSongsState
 
-
     fun loadFavouriteSongs() {
         viewModelScope.launch {
             repository

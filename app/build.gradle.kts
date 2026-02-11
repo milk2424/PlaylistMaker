@@ -4,6 +4,7 @@ plugins {
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -39,6 +40,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 }
 
@@ -53,10 +55,24 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("io.insert-koin:koin-android:3.3.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.3.0")
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.fragment.ktx)
+
+    val composeBom = platform("androidx.compose:compose-bom:2025.12.00")
+    implementation(composeBom)
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.material3.adaptive:adaptive")
+    implementation("androidx.activity:activity-compose:1.11.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.10.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

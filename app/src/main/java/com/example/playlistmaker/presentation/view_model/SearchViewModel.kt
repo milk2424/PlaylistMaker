@@ -16,9 +16,36 @@ import com.example.playlistmaker.presentation.utils.search.SongState.Successful
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel() {
+
+
+    private val _inputText: MutableStateFlow<String> = MutableStateFlow("")
+
+    val inputText = _inputText.asStateFlow()
+
+    fun updateInputText(text: String) {
+        _inputText.value = text
+        loadSongsFromApi(
+            _inputText.value,
+            SEARCH_EDIT_TEXT_TRACK_DELAY
+        )
+    }
+
+    fun clearInputText() {
+        _inputText.value = ""
+        loadHistory()
+    }
+
+    fun searchSongsByDoneAction() {
+        if (_inputText.value.isNotEmpty()) loadSongsFromApi(
+            _inputText.value
+        ) else loadHistory()
+    }
+
     private val songStateMutableLiveData = MutableLiveData<SongState>()
 
     private var loadSongsJob: Job? = null
@@ -29,16 +56,20 @@ class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel(
         loadHistory()
     }
 
-    fun clearHistory() = songsInteractor.clearSongHistory()
+    fun clearHistory() {
+        songsInteractor.clearSongHistory()
+        loadHistory()
+    }
 
     fun addSongToHistory(song: Song) = songsInteractor.addSongToHistory(song)
 
     fun loadHistory() {
+        loadSongsJob?.cancel()
         songStateMutableLiveData.value = Loading
         songStateMutableLiveData.postValue(History(songsInteractor.loadSongHistory().reversed()))
     }
 
-    fun loadSongsFromApi(songName: String, searchDelay: Long) {
+    fun loadSongsFromApi(songName: String, searchDelay: Long = 0L) {
         loadSongsJob?.cancel()
         songStateMutableLiveData.postValue(Loading)
         loadSongsJob = viewModelScope.launch(Dispatchers.IO) {
@@ -58,6 +89,10 @@ class SearchViewModel(private val songsInteractor: SongsInteractor) : ViewModel(
                     }
                 }
         }
+    }
+
+    companion object {
+        private const val SEARCH_EDIT_TEXT_TRACK_DELAY = 2000L
     }
 
 }
