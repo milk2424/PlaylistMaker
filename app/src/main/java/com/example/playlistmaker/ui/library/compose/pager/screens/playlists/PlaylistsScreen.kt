@@ -21,7 +21,11 @@ import com.example.playlistmaker.ui.library.compose.pager.Error
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PlaylistsScreen(viewModel: PlaylistViewModel = koinViewModel(),onPlaylistClicked:(Playlist)->Unit) {
+fun PlaylistsScreen(
+    viewModel: PlaylistViewModel = koinViewModel(),
+    onPlaylistClicked: (Playlist) -> Unit,
+    newPlaylistClicked: () -> Unit
+) {
     val screenState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -34,7 +38,7 @@ fun PlaylistsScreen(viewModel: PlaylistViewModel = koinViewModel(),onPlaylistCli
             contentAlignment = Alignment.Center
         ) {
             MainButton(stringResource(R.string.new_playlist)) {
-
+                newPlaylistClicked()
             }
         }
 
@@ -42,7 +46,7 @@ fun PlaylistsScreen(viewModel: PlaylistViewModel = koinViewModel(),onPlaylistCli
             is PlaylistUIState.Empty -> Error(stringResource(R.string.you_dont_create_any_playlists))
             is PlaylistUIState.Loading -> ProgressIndicator()
             is PlaylistUIState.Success -> {
-                PlaylistsGrid((screenState as PlaylistUIState.Success).data,onPlaylistClicked)
+                PlaylistsGrid((screenState as PlaylistUIState.Success).data, onPlaylistClicked)
             }
 
         }

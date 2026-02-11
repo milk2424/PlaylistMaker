@@ -27,7 +27,7 @@ import com.example.playlistmaker.ui.library.compose.pager.screens.favourite_song
 import com.example.playlistmaker.ui.library.compose.pager.screens.playlists.PlaylistsScreen
 
 @Composable
-fun LibraryFragmentCompose(onSongClicked: (Song) -> Unit, onPlaylistClicked:(Playlist)->Unit) {
+fun LibraryFragmentCompose(onSongClicked: (Song) -> Unit, onPlaylistClicked:(Playlist)->Unit,newPlaylistClicked:()->Unit) {
 
     val pagerState = rememberPagerState(pageCount = { 2 })
 
@@ -81,7 +81,7 @@ fun LibraryFragmentCompose(onSongClicked: (Song) -> Unit, onPlaylistClicked:(Pla
         ) { page ->
             when (page) {
                 0 -> FavouriteSongsScreen(onSongClicked = onSongClicked)
-                1 -> PlaylistsScreen(onPlaylistClicked = onPlaylistClicked)
+                1 -> PlaylistsScreen(onPlaylistClicked = onPlaylistClicked, newPlaylistClicked = newPlaylistClicked)
             }
         }
 

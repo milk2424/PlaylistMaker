@@ -118,7 +118,7 @@ class PlayerViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             loadPlaylistsUseCase().collect { state ->
                 when (state) {
-                    is PlaylistState.Empty -> BottomSheetUIState.Data(emptyList())
+                    is PlaylistState.Empty ->_bottomSheetDataState.value= BottomSheetUIState.Data(emptyList())
                     is PlaylistState.Loading -> {}
                     is PlaylistState.Success ->
                         _bottomSheetDataState.value = BottomSheetUIState.Data(state.data)

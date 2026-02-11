@@ -8,12 +8,17 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.ui.search.song_preview.SongItem
 
 @Composable
-fun SongsList(modifier: Modifier, songs: List<Song>, onItemClick:(Song)-> Unit) {
+fun SongsList(
+    modifier: Modifier,
+    songs: List<Song>,
+    onItemClick: (Song) -> Unit,
+    onItemLongClicked: ((Song) -> Unit)? = null
+) {
     LazyColumn(
         modifier = modifier,
     ) {
         items(songs) { song ->
-            SongItem(song, onItemClick)
+            SongItem(song, onItemClick,onItemLongClicked)
         }
     }
 }

@@ -37,6 +37,11 @@ class LibraryFragment : Fragment() {
                                     playlist
                                 )
                             )
+                        },
+                        newPlaylistClicked = {
+                            findNavController().navigate(
+                                LibraryFragmentDirections.actionLibraryFragmentToNewPlaylistFragment()
+                            )
                         }
                     )
                 }

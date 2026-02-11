@@ -24,7 +24,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.favourite_songs.model.Playlist
 
 @Composable
-fun BottomSheetPlaylistItem(playlist: Playlist, modifier: Modifier) {
+fun BottomSheetPlaylistItem(playlist: Playlist, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -39,7 +39,12 @@ fun BottomSheetPlaylistItem(playlist: Playlist, modifier: Modifier) {
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
-        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(
                 text = playlist.name,
                 fontSize = 16.sp,

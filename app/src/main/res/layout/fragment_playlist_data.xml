@@ -142,7 +142,7 @@
         android:background="@drawable/bg_bottom_sheet"
         android:clickable="true"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:behavior_hideable="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         >
@@ -194,6 +194,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_bottom_sheet"
         android:clickable="true"
+        android:visibility="gone"
         android:orientation="vertical"
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"

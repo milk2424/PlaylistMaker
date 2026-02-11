@@ -1,8 +1,10 @@
 package com.example.playlistmaker.ui.search.song_preview
 
+import android.R.attr.onClick
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,15 +21,16 @@ import com.example.playlistmaker.domain.search.model.Song
 import com.example.playlistmaker.presentation.mapper.player_mapper.PlayerTimeMapper
 
 @Composable
-fun SongItem(song: Song, onItemClick: (Song) -> Unit) {
+fun SongItem(song: Song, onItemClick: (Song) -> Unit, onItemLongClicked: ((Song) -> Unit)? = null) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
             .background(Color.Transparent)
-            .clickable {
-                onItemClick.invoke(song)
-            },
+            .combinedClickable(
+                onClick = { onItemClick.invoke(song) },
+                onLongClick = { onItemLongClicked?.invoke(song) }
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         SongImage(song.artworkUrl100)
